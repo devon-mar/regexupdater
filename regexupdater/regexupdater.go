@@ -452,3 +452,7 @@ func (ru *RegexUpdater) checkSecondaryFeed(u *updateConfig, version string) (boo
 	rel, err := feed.GetRelease(replaced, u.SecondaryFeed.Feed.feedConfig)
 	return rel != nil, err
 }
+
+func (ru *RegexUpdater) DeletePRBranch(id string) (string, error) {
+	return ru.repo.DeletePRBranch(id)
+}

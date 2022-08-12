@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/devon-mar/regexupdater/utils/githubutil"
 	"github.com/google/go-github/v45/github"
@@ -297,6 +298,16 @@ func (gh *GitHub) ClosePR(pr PullRequest) error {
 	return err
 }
 
+func (gh *GitHub) deleteBranch(name string) error {
+	_, err := gh.client.Git.DeleteRef(
+		context.Background(),
+		gh.Owner,
+		gh.Repo,
+		"refs/heads/"+name,
+	)
+	return err
+}
+
 // UpdatePRFile implements Repository
 func (gh *GitHub) UpdatePRFile(pr PullRequest, path string, oldSHA string, newContent []byte, commitMsg string) error {
 	gpr := pr.(*GitHubPR)
@@ -324,6 +335,28 @@ func (gh *GitHub) UpdatePRFile(pr PullRequest, path string, oldSHA string, newCo
 	}
 
 	return gh.editRef("heads/"+*gpr.pr.Head.Ref, *resp.SHA)
+}
+
+// DeletePRBranch implements Repository
+func (gh *GitHub) DeletePRBranch(prID string) (string, error) {
+	prNumber, err := strconv.Atoi(prID)
+	if err != nil || prNumber < 1 {
+		return "", fmt.Errorf("%s is not a valid PR number.", prID)
+	}
+
+	pr, _, err := gh.client.PullRequests.Get(
+		context.Background(),
+		gh.Owner,
+		gh.Repo,
+		prNumber,
+	)
+	if err != nil {
+		return "", err
+	}
+	if pr.Head == nil || pr.Head.Ref == nil {
+		return "", errors.New("PR head ref is nil")
+	}
+	return *pr.Head.Ref, gh.deleteBranch(*pr.Head.Ref)
 }
 
 type GitHubFile struct {

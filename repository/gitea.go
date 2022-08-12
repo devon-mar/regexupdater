@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/devon-mar/regexupdater/utils/giteautil"
@@ -267,6 +268,24 @@ func (g *Gitea) UpdatePRFile(pr PullRequest, path string, oldSHA string, newCont
 		gpr.pr.Body,
 	)
 	return err
+}
+
+// DeletePRBranch implements Repository
+func (g *Gitea) DeletePRBranch(prID string) (string, error) {
+	index, err := strconv.ParseInt(prID, 10, 64)
+	if err != nil || index < 1 {
+		return "", fmt.Errorf("%s is not a valid PR index.", prID)
+	}
+
+	pr, _, err := g.client.GetPullRequest(g.Owner, g.Repo, index)
+	ok, _, err := g.client.DeleteRepoBranch(g.Owner, g.Repo, pr.Head.Name)
+	if err != nil {
+		return "", err
+	}
+	if !ok {
+		return "", errors.New("gitea did not return ok")
+	}
+	return pr.Head.Name, nil
 }
 
 type GiteaFile struct {

@@ -121,6 +121,11 @@ type testRepository struct {
 	wantUpdate *fileUpdate
 }
 
+// DeletePRBranch implements repository.Repository
+func (*testRepository) DeletePRBranch(prID string) error {
+	panic("unimplemented")
+}
+
 // AddPRComment implements repository.Repository
 func (r *testRepository) AddPRComment(pr repository.PullRequest, body string) error {
 	tpr := pr.(*testPR)
