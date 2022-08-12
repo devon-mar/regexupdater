@@ -240,11 +240,11 @@ func (g *Gitea) ClosePR(pr PullRequest) error {
 	return err
 }
 
-// UpdatePRFile implements Repository
+// RebasePR implements Repository
 //
 // Updates the file by creating a new PR based on this one since Gitea
 // doesn't have an API for git references.
-func (g *Gitea) UpdatePRFile(pr PullRequest, path string, oldSHA string, newContent []byte, commitMsg string) error {
+func (g *Gitea) RebasePR(pr PullRequest, path string, oldSHA string, newContent []byte, commitMsg string) error {
 	gpr := pr.(*GiteaPR)
 
 	file, err := g.GetFile(path)

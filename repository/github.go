@@ -308,8 +308,8 @@ func (gh *GitHub) deleteBranch(name string) error {
 	return err
 }
 
-// UpdatePRFile implements Repository
-func (gh *GitHub) UpdatePRFile(pr PullRequest, path string, oldSHA string, newContent []byte, commitMsg string) error {
+// RebasePR implements Repository
+func (gh *GitHub) RebasePR(pr PullRequest, path string, oldSHA string, newContent []byte, commitMsg string) error {
 	gpr := pr.(*GitHubPR)
 	if gpr.pr.Head == nil {
 		return errors.New("PR head was nil")

@@ -122,7 +122,7 @@ type testRepository struct {
 }
 
 // DeletePRBranch implements repository.Repository
-func (*testRepository) DeletePRBranch(prID string) error {
+func (*testRepository) DeletePRBranch(prID string) (error, string) {
 	panic("unimplemented")
 }
 
@@ -146,7 +146,7 @@ func (r *testRepository) ClosePR(pr repository.PullRequest) error {
 	return nil
 }
 
-// UpdatePRFile implements repository.Repository
+// RebasePR implements Repository.Repository
 func (*testRepository) UpdatePRFile(pr repository.PullRequest, path string, oldSHA string, newContent []byte, commitMsg string) error {
 	panic("unimplemented")
 }

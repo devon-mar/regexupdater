@@ -435,7 +435,7 @@ func (ru *RegexUpdater) fixIfUnmergeable(file repository.File, pr repository.Pul
 	if err != nil {
 		return fmt.Errorf("error templating commit message: %w", err)
 	}
-	if err := ru.repo.UpdatePRFile(pr, file.Path(), file.SHA(), newContent, commitMsg); err != nil {
+	if err := ru.repo.RebasePR(pr, file.Path(), file.SHA(), newContent, commitMsg); err != nil {
 		return err
 	}
 

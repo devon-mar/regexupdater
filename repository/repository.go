@@ -20,7 +20,7 @@ type Repository interface {
 	// Implementations can assume that pr is their own PR type.
 	ClosePR(pr PullRequest) error
 	AddPRComment(pr PullRequest, body string) error
-	UpdatePRFile(pr PullRequest, path string, oldSHA string, newContent []byte, commitMsg string) error
+	RebasePR(pr PullRequest, path string, oldSHA string, newContent []byte, commitMsg string) error
 	// Return the name of the deleted branch.
 	DeletePRBranch(prID string) (string, error)
 }
