@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en-US">
+  <id>tag:github.com,2008:https://github.com/sirupsen/logrus/releases</id>
+  <link type="text/html" rel="alternate" href="https://github.com/sirupsen/logrus/releases"/>
+  <link type="application/atom+xml" rel="self" href="https://github.com/sirupsen/logrus/releases.atom"/>
+  <title>Release notes from logrus</title>
+  <updated>2021-03-09T02:28:17-08:00</updated>
+  <entry>
+    <id>tag:github.com,2008:Repository/13628513/v1.8.1</id>
+    <updated>2021-03-09T02:28:58-08:00</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/sirupsen/logrus/releases/tag/v1.8.1"/>
+    <title>v1.8.1</title>
+    <content type="html">c0</content>
+    <author>
+      <name>dgsb</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/5495748?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/13628513/v1.8.0</id>
+    <updated>2021-02-17T08:50:04-08:00</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/sirupsen/logrus/releases/tag/v1.8.0"/>
+    <title>v1.8.0</title>
+    <content type="html">c1</content>
+    <author>
+      <name>dgsb</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/5495748?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/13628513/v1.7.1</id>
+    <updated>2021-02-16T02:49:37-08:00</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/sirupsen/logrus/releases/tag/v1.7.1"/>
+    <title>v1.7.1</title>
+    <content type="html">c2</content>
+    <author>
+      <name>dgsb</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/5495748?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/13628513/v1.6.0</id>
+    <updated>2020-05-02T06:08:34-07:00</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/sirupsen/logrus/releases/tag/v1.6.0"/>
+    <title>Release v1.6.0</title>
+    <content type="html">c3</content>
+    <author>
+      <name>dgsb</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/5495748?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/13628513/v1.5.0</id>
+    <updated>2020-03-23T06:10:20-07:00</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/sirupsen/logrus/releases/tag/v1.5.0"/>
+    <title>v1.5.0</title>
+    <content type="html">c4</content>
+    <author>
+      <name>markphelps</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/209477?s=60&amp;v=4"/>
+  </entry>
+</feed>

@@ -1,0 +1,7 @@
+{
+    "name": "library/alpine",
+    "tags": [
+        "2.6",
+        "2.7"
+    ]
+}

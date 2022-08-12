@@ -1,0 +1,351 @@
+{
+    "info": {
+        "author": "The pip developers",
+        "author_email": "distutils-sig@python.org",
+        "bugtrack_url": null,
+        "classifiers": [
+            "Development Status :: 5 - Production/Stable",
+            "Intended Audience :: Developers",
+            "License :: OSI Approved :: MIT License",
+            "Programming Language :: Python",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3 :: Only",
+            "Programming Language :: Python :: 3.7",
+            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: Implementation :: CPython",
+            "Programming Language :: Python :: Implementation :: PyPy",
+            "Topic :: Software Development :: Build Tools"
+        ],
+        "description": "pip - The Python Package Installer\n==================================\n\n.. image:: https://img.shields.io/pypi/v/pip.svg\n   :target: https://pypi.org/project/pip/\n\n.. image:: https://readthedocs.org/projects/pip/badge/?version=latest\n   :target: https://pip.pypa.io/en/latest\n\npip is the `package installer`_ for Python. You can use pip to install packages from the `Python Package Index`_ and other indexes.\n\nPlease take a look at our documentation for how to install and use pip:\n\n* `Installation`_\n* `Usage`_\n\nWe release updates regularly, with a new version every 3 months. Find more details in our documentation:\n\n* `Release notes`_\n* `Release process`_\n\nIn pip 20.3, we've `made a big improvement to the heart of pip`_; `learn more`_. We want your input, so `sign up for our user experience research studies`_ to help us do it right.\n\n**Note**: pip 21.0, in January 2021, removed Python 2 support, per pip's `Python 2 support policy`_. Please migrate to Python 3.\n\nIf you find bugs, need help, or want to talk to the developers, please use our mailing lists or chat rooms:\n\n* `Issue tracking`_\n* `Discourse channel`_\n* `User IRC`_\n\nIf you want to get involved head over to GitHub to get the source code, look at our development documentation and feel free to jump on the developer mailing lists and chat rooms:\n\n* `GitHub page`_\n* `Development documentation`_\n* `Development mailing list`_\n* `Development IRC`_\n\nCode of Conduct\n---------------\n\nEveryone interacting in the pip project's codebases, issue trackers, chat\nrooms, and mailing lists is expected to follow the `PSF Code of Conduct`_.\n\n.. _package installer: https://packaging.python.org/guides/tool-recommendations/\n.. _Python Package Index: https://pypi.org\n.. _Installation: https://pip.pypa.io/en/stable/installation/\n.. _Usage: https://pip.pypa.io/en/stable/\n.. _Release notes: https://pip.pypa.io/en/stable/news.html\n.. _Release process: https://pip.pypa.io/en/latest/development/release-process/\n.. _GitHub page: https://github.com/pypa/pip\n.. _Development documentation: https://pip.pypa.io/en/latest/development\n.. _made a big improvement to the heart of pip: https://pyfound.blogspot.com/2020/11/pip-20-3-new-resolver.html\n.. _learn more: https://pip.pypa.io/en/latest/user_guide/#changes-to-the-pip-dependency-resolver-in-20-3-2020\n.. _sign up for our user experience research studies: https://pyfound.blogspot.com/2020/03/new-pip-resolver-to-roll-out-this-year.html\n.. _Python 2 support policy: https://pip.pypa.io/en/latest/development/release-process/#python-2-support\n.. _Issue tracking: https://github.com/pypa/pip/issues\n.. _Discourse channel: https://discuss.python.org/c/packaging\n.. _Development mailing list: https://mail.python.org/mailman3/lists/distutils-sig.python.org/\n.. _User IRC: https://kiwiirc.com/nextclient/#ircs://irc.libera.chat:+6697/pypa\n.. _Development IRC: https://kiwiirc.com/nextclient/#ircs://irc.libera.chat:+6697/pypa-dev\n.. _PSF Code of Conduct: https://github.com/pypa/.github/blob/main/CODE_OF_CONDUCT.md\n\n\n",
+        "description_content_type": "",
+        "docs_url": null,
+        "download_url": "",
+        "downloads": {
+            "last_day": -1,
+            "last_month": -1,
+            "last_week": -1
+        },
+        "home_page": "https://pip.pypa.io/",
+        "keywords": "",
+        "license": "MIT",
+        "maintainer": "",
+        "maintainer_email": "",
+        "name": "pip",
+        "package_url": "https://pypi.org/project/pip/",
+        "platform": null,
+        "project_url": "https://pypi.org/project/pip/",
+        "project_urls": {
+            "Changelog": "https://pip.pypa.io/en/stable/news/",
+            "Documentation": "https://pip.pypa.io",
+            "Homepage": "https://pip.pypa.io/",
+            "Source": "https://github.com/pypa/pip"
+        },
+        "release_url": "https://pypi.org/project/pip/22.1.2/",
+        "requires_dist": null,
+        "requires_python": ">=3.7",
+        "summary": "The PyPA recommended tool for installing Python packages.",
+        "version": "22.1.2",
+        "yanked": false,
+        "yanked_reason": null
+    },
+    "last_serial": 13987178,
+    "releases": {
+        "1.5.5": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "03a932d6f82a3887d8de1cdb837c87ed",
+                    "sha256": "fe7a5808190067b2598d85def9b83db46e5d64a00848ad843e107c36e1db4ae6"
+                },
+                "downloads": -1,
+                "filename": "pip-1.5.5-py2.py3-none-any.whl",
+                "has_sig": true,
+                "md5_digest": "03a932d6f82a3887d8de1cdb837c87ed",
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "requires_python": null,
+                "size": 1173434,
+                "upload_time": "2014-05-03T06:26:46",
+                "upload_time_iso_8601": "2014-05-03T06:26:46.261575Z",
+                "url": "https://files.pythonhosted.org/packages/ce/c2/10d996b9c51b126a9f0bb9e14a9edcdd5c88888323c0685bb9b392b6c47c/pip-1.5.5-py2.py3-none-any.whl",
+                "yanked": false,
+                "yanked_reason": null
+            },
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "7520581ba0687dec1ce85bd15496537b",
+                    "sha256": "4b7f5124364ae9b5ba833dcd8813a84c1c06fba1d7c8543323c7af4b33188eca"
+                },
+                "downloads": -1,
+                "filename": "pip-1.5.5.tar.gz",
+                "has_sig": true,
+                "md5_digest": "7520581ba0687dec1ce85bd15496537b",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": null,
+                "size": 1084356,
+                "upload_time": "2014-05-03T06:26:49",
+                "upload_time_iso_8601": "2014-05-03T06:26:49.668653Z",
+                "url": "https://files.pythonhosted.org/packages/88/01/a442fde40bd9aaf837612536f16ab751fac628807fd718690795b8ade77d/pip-1.5.5.tar.gz",
+                "yanked": false,
+                "yanked_reason": null
+            }
+        ],
+        "20.0": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "d87ea31fe1e5d853c3799878dcf072db",
+                    "sha256": "eea07b449d969dbc8c062c157852cf8ed2ad1b8b5ac965a6b819e62929e41703"
+                },
+                "downloads": -1,
+                "filename": "pip-20.0-py2.py3-none-any.whl",
+                "has_sig": false,
+                "md5_digest": "d87ea31fe1e5d853c3799878dcf072db",
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "requires_python": ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*",
+                "size": 1518959,
+                "upload_time": "2020-01-21T11:42:56",
+                "upload_time_iso_8601": "2020-01-21T11:42:56.407994Z",
+                "url": "https://files.pythonhosted.org/packages/60/65/16487a7c4e0f95bb3fc89c2e377be331fd496b7a9b08fd3077de7f3ae2cf/pip-20.0-py2.py3-none-any.whl",
+                "yanked": true,
+                "yanked_reason": null
+            },
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "d5c7e5820f0d2ae13f37cdb1807b5b96",
+                    "sha256": "5128e9a9401f1d16c1d15b2ed766a79d7813db1538428d0b0ce74838249e3a41"
+                },
+                "downloads": -1,
+                "filename": "pip-20.0.tar.gz",
+                "has_sig": false,
+                "md5_digest": "d5c7e5820f0d2ae13f37cdb1807b5b96",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*",
+                "size": 1433834,
+                "upload_time": "2020-01-21T11:42:59",
+                "upload_time_iso_8601": "2020-01-21T11:42:59.282402Z",
+                "url": "https://files.pythonhosted.org/packages/8c/5c/c18d58ab5c1a702bf670e0bd6a77cd4645e4aeca021c6118ef850895cc96/pip-20.0.tar.gz",
+                "yanked": true,
+                "yanked_reason": null
+            }
+        ],
+        "20.0.1": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "d9f6c711a90ab11a255f810eaf5dd589",
+                    "sha256": "b7110a319790ae17e8105ecd6fe07dbcc098a280c6d27b6dd7a20174927c24d7"
+                },
+                "downloads": -1,
+                "filename": "pip-20.0.1-py2.py3-none-any.whl",
+                "has_sig": false,
+                "md5_digest": "d9f6c711a90ab11a255f810eaf5dd589",
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "requires_python": ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*",
+                "size": 1520463,
+                "upload_time": "2020-01-21T12:43:41",
+                "upload_time_iso_8601": "2020-01-21T12:43:41.837686Z",
+                "url": "https://files.pythonhosted.org/packages/57/36/67f809c135c17ec9b8276466cc57f35b98c240f55c780689ea29fa32f512/pip-20.0.1-py2.py3-none-any.whl",
+                "yanked": false,
+                "yanked_reason": null
+            },
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "b5922a07b294ea4d7f556822b10ef49e",
+                    "sha256": "3cebbac2a1502e09265f94e5717408339de846b3c0f0ed086d7b817df9cab822"
+                },
+                "downloads": -1,
+                "filename": "pip-20.0.1.tar.gz",
+                "has_sig": false,
+                "md5_digest": "b5922a07b294ea4d7f556822b10ef49e",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*",
+                "size": 1433939,
+                "upload_time": "2020-01-21T12:43:45",
+                "upload_time_iso_8601": "2020-01-21T12:43:45.550855Z",
+                "url": "https://files.pythonhosted.org/packages/28/af/2c76c8aa46ccdf7578b83d97a11a2d1858794d4be4a1610ade0d30182e8b/pip-20.0.1.tar.gz",
+                "yanked": false,
+                "yanked_reason": null
+            }
+        ],
+        "20.1": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "f97751566557b07c724d486e2ccd8726",
+                    "sha256": "4fdc7fd2db7636777d28d2e1432e2876e30c2b790d461f135716577f73104369"
+                },
+                "downloads": -1,
+                "filename": "pip-20.1-py2.py3-none-any.whl",
+                "has_sig": false,
+                "md5_digest": "f97751566557b07c724d486e2ccd8726",
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "requires_python": ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*",
+                "size": 1489786,
+                "upload_time": "2020-04-28T16:54:23",
+                "upload_time_iso_8601": "2020-04-28T16:54:23.232633Z",
+                "url": "https://files.pythonhosted.org/packages/54/2e/df11ea7e23e7e761d484ed3740285a34e38548cf2bad2bed3dd5768ec8b9/pip-20.1-py2.py3-none-any.whl",
+                "yanked": false,
+                "yanked_reason": null
+            },
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "cbe8a4277d0ebbb508a1913c6b670fe6",
+                    "sha256": "572c0f25eca7c87217b21f6945b7192744103b18f4e4b16b8a83b227a811e192"
+                },
+                "downloads": -1,
+                "filename": "pip-20.1.tar.gz",
+                "has_sig": false,
+                "md5_digest": "cbe8a4277d0ebbb508a1913c6b670fe6",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*",
+                "size": 1474248,
+                "upload_time": "2020-04-28T16:54:25",
+                "upload_time_iso_8601": "2020-04-28T16:54:25.410325Z",
+                "url": "https://files.pythonhosted.org/packages/d1/05/059c78cd5d740d2299266ffa15514dad6692d4694df571bf168e2cdd98fb/pip-20.1.tar.gz",
+                "yanked": false,
+                "yanked_reason": null
+            }
+        ],
+        "20.1.1": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "eeea173ab944151eb8ffb7bc8a3d1ddc",
+                    "sha256": "b27c4dedae8c41aa59108f2fa38bf78e0890e590545bc8ece7cdceb4ba60f6e4"
+                },
+                "downloads": -1,
+                "filename": "pip-20.1.1-py2.py3-none-any.whl",
+                "has_sig": false,
+                "md5_digest": "eeea173ab944151eb8ffb7bc8a3d1ddc",
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "requires_python": ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*",
+                "size": 1490666,
+                "upload_time": "2020-05-19T10:40:29",
+                "upload_time_iso_8601": "2020-05-19T10:40:29.087652Z",
+                "url": "https://files.pythonhosted.org/packages/43/84/23ed6a1796480a6f1a2d38f2802901d078266bda38388954d01d3f2e821d/pip-20.1.1-py2.py3-none-any.whl",
+                "yanked": false,
+                "yanked_reason": null
+            },
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "62fa8775c44b070c5e1a3f44b0b6ccc5",
+                    "sha256": "27f8dc29387dd83249e06e681ce087e6061826582198a425085e0bf4c1cf3a55"
+                },
+                "downloads": -1,
+                "filename": "pip-20.1.1.tar.gz",
+                "has_sig": false,
+                "md5_digest": "62fa8775c44b070c5e1a3f44b0b6ccc5",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*",
+                "size": 1475109,
+                "upload_time": "2020-05-19T10:40:32",
+                "upload_time_iso_8601": "2020-05-19T10:40:32.181030Z",
+                "url": "https://files.pythonhosted.org/packages/08/25/f204a6138dade2f6757b4ae99bc3994aac28a5602c97ddb2a35e0e22fbc4/pip-20.1.1.tar.gz",
+                "yanked": false,
+                "yanked_reason": null
+            }
+        ],
+        "20.1b1": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "c4f8671f195f9a41444ee55fad3c9786",
+                    "sha256": "4cf0348b683937da883ccaae8c8bcfc9b4c7ba4c48b38cc2d89cd7b8d0b220d9"
+                },
+                "downloads": -1,
+                "filename": "pip-20.1b1-py2.py3-none-any.whl",
+                "has_sig": false,
+                "md5_digest": "c4f8671f195f9a41444ee55fad3c9786",
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "requires_python": ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*",
+                "size": 1489600,
+                "upload_time": "2020-04-21T02:03:49",
+                "upload_time_iso_8601": "2020-04-21T02:03:49.220700Z",
+                "url": "https://files.pythonhosted.org/packages/ec/05/82d3fababbf462d876883ebc36f030f4fa057a563a80f5a26ee63679d9ea/pip-20.1b1-py2.py3-none-any.whl",
+                "yanked": false,
+                "yanked_reason": null
+            },
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "cf3d329b2d755a4bcb1d712725738706",
+                    "sha256": "699880a47f6d306f4f9a87ca151ef33d41d2223b81ff343b786d38c297923a19"
+                },
+                "downloads": -1,
+                "filename": "pip-20.1b1.tar.gz",
+                "has_sig": false,
+                "md5_digest": "cf3d329b2d755a4bcb1d712725738706",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*",
+                "size": 1473869,
+                "upload_time": "2020-04-21T02:03:51",
+                "upload_time_iso_8601": "2020-04-21T02:03:51.598151Z",
+                "url": "https://files.pythonhosted.org/packages/cd/81/c1184456fe506bd50992571c9f8581907976ce71502e36741f033e2da1f1/pip-20.1b1.tar.gz",
+                "yanked": false,
+                "yanked_reason": null
+            }
+        ]
+    },
+    "urls": [
+        {
+            "comment_text": "",
+            "digests": {
+                "md5": "564799f1b166d9d4f87a6921c35e0008",
+                "sha256": "a3edacb89022ef5258bf61852728bf866632a394da837ca49eb4303635835f17"
+            },
+            "downloads": -1,
+            "filename": "pip-22.1.2-py3-none-any.whl",
+            "has_sig": false,
+            "md5_digest": "564799f1b166d9d4f87a6921c35e0008",
+            "packagetype": "bdist_wheel",
+            "python_version": "py3",
+            "requires_python": ">=3.7",
+            "size": 2140742,
+            "upload_time": "2022-05-31T11:19:58",
+            "upload_time_iso_8601": "2022-05-31T11:19:58.344567Z",
+            "url": "https://files.pythonhosted.org/packages/96/2f/caec18213f6a67852f6997fb0673ae08d2e93d1b81573edb93ba4ef06970/pip-22.1.2-py3-none-any.whl",
+            "yanked": false,
+            "yanked_reason": null
+        },
+        {
+            "comment_text": "",
+            "digests": {
+                "md5": "6ec06d38c3aed5d22bcbbbfbf7114d6a",
+                "sha256": "6d55b27e10f506312894a87ccc59f280136bad9061719fac9101bdad5a6bce69"
+            },
+            "downloads": -1,
+            "filename": "pip-22.1.2.tar.gz",
+            "has_sig": false,
+            "md5_digest": "6ec06d38c3aed5d22bcbbbfbf7114d6a",
+            "packagetype": "sdist",
+            "python_version": "source",
+            "requires_python": ">=3.7",
+            "size": 2112549,
+            "upload_time": "2022-05-31T11:20:04",
+            "upload_time_iso_8601": "2022-05-31T11:20:04.241597Z",
+            "url": "https://files.pythonhosted.org/packages/4b/b6/0fa7aa968a9fa4ef63a51b3ff0644e59f49dcd7235b3fd6cceb23f202e08/pip-22.1.2.tar.gz",
+            "yanked": false,
+            "yanked_reason": null
+        }
+    ],
+    "vulnerabilities": []
+}
