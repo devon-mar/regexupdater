@@ -334,7 +334,11 @@ func (gh *GitHub) UpdatePRFile(pr PullRequest, path string, oldSHA string, newCo
 		return errors.New("new commit SHA was nil")
 	}
 
-	return gh.editRef("heads/"+*gpr.pr.Head.Ref, *resp.SHA)
+	if err = gh.editRef("heads/"+*gpr.pr.Head.Ref, *resp.SHA); err != nil {
+		return fmt.Errorf("error editing ref: %w", err)
+	}
+
+	return gh.deleteBranch(branch)
 }
 
 // DeletePRBranch implements Repository
