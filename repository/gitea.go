@@ -278,6 +278,10 @@ func (g *Gitea) DeletePRBranch(prID string) (string, error) {
 	}
 
 	pr, _, err := g.client.GetPullRequest(g.Owner, g.Repo, index)
+	if err != nil {
+		return "", err
+	}
+
 	ok, _, err := g.client.DeleteRepoBranch(g.Owner, g.Repo, pr.Head.Name)
 	if err != nil {
 		return "", err
