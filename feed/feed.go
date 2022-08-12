@@ -142,3 +142,35 @@ func newConfig(configMap map[string]interface{}, config interface{}) (interface{
 	}
 	return config, nil
 }
+
+// Limit the number of releases to limit.
+func limit(relChan chan *Release, errChan chan error, limit int) (chan *Release, chan error) {
+	ourRel := make(chan *Release)
+	ourErr := make(chan error)
+
+	go func() {
+		defer close(ourRel)
+		defer close(ourErr)
+
+		var releasesSent int
+		for {
+			select {
+			case r, ok := <-relChan:
+				if !ok {
+					return
+				}
+				ourRel <- r
+				releasesSent++
+				if releasesSent == limit {
+					return
+				}
+			case e, ok := <-errChan:
+				if !ok {
+					return
+				}
+				ourErr <- e
+			}
+		}
+	}()
+	return ourRel, ourErr
+}

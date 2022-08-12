@@ -20,7 +20,8 @@ type gitHubConfig struct {
 
 type gitHubCommon struct {
 	githubutil.GitHubOptions `cfg:",squash"`
-	PageSize                 int `cfg:"page_size"`
+	PageSize                 int `cfg:"page_size" validate:"omitempty,gte=0"`
+	Limit                    int `cfg:"limit" validate:"gte=0"`
 
 	client *github.Client
 }
@@ -31,6 +32,10 @@ func (g *gitHubCommon) init() error {
 	if g.PageSize == 0 {
 		// 100 is the max.
 		g.PageSize = 100
+	}
+
+	if g.Limit == 0 {
+		g.Limit = g.PageSize
 	}
 
 	g.client, _, _, err = githubutil.NewGitHub(&g.GitHubOptions)
@@ -63,6 +68,11 @@ func (g *GitHubReleases) GetRelease(release string, config interface{}) (*Releas
 
 // GetReleases implements Feed
 func (g *GitHubReleases) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
+	r, e := g.getReleases(config, done)
+	return limit(r, e, g.Limit)
+}
+
+func (g *GitHubReleases) getReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
 	relChan := make(chan *Release)
 	errChan := make(chan error)
 
@@ -156,6 +166,11 @@ func (g *GitHubTags) GetRelease(release string, config interface{}) (*Release, e
 
 // GetReleases implements Feed
 func (g *GitHubTags) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
+	r, e := g.getReleases(config, done)
+	return limit(r, e, g.Limit)
+}
+
+func (g *GitHubTags) getReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
 	relChan := make(chan *Release)
 	errChan := make(chan error)
 

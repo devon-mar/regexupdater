@@ -26,10 +26,14 @@ type ContainerRegistry struct {
 	URL      string `cfg:"url" validate:"required,url"`
 	PageSize int    `cfg:"page_size" validate:"omitempty,gt=0"`
 	Token    string `cfg:"token"`
+	Limit    int    `cfg:"limit" validate:"gte=0"`
 }
 
 func (c *ContainerRegistry) init() error {
 	c.URL = strings.TrimRight(c.URL, "/")
+	if c.Limit == 0 {
+		c.Limit = c.PageSize
+	}
 	return nil
 }
 
@@ -45,6 +49,11 @@ func (c *ContainerRegistry) GetRelease(release string, config interface{}) (*Rel
 
 // GetReleases implements Feed
 func (c *ContainerRegistry) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
+	r, e := c.getReleases(config, done)
+	return limit(r, e, c.Limit)
+}
+
+func (c *ContainerRegistry) getReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
 	relChan := make(chan *Release)
 	errChan := make(chan error)
 	go func() {

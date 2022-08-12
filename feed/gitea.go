@@ -9,6 +9,10 @@ import (
 const (
 	typeGiteaReleases = "gitea_releases"
 	typeGiteaTags     = "gitea_tags"
+
+	// The default page size
+	// https://docs.gitea.io/en-us/config-cheat-sheet/
+	giteaDefaultPageSize = 30
 )
 
 type giteaConfig struct {
@@ -17,12 +21,13 @@ type giteaConfig struct {
 }
 
 type giteaCommon struct {
-	URL   string `cfg:"url" validate:"required,url"`
-	Owner string `cfg:"owner" validate:"required"`
-	Repo  string `cfg:"repo" validate:"required"`
+	URL      string `cfg:"url" validate:"required,url"`
+	Owner    string `cfg:"owner" validate:"required"`
+	Repo     string `cfg:"repo" validate:"required"`
+	PageSize int    `cfg:"page_size" validate:"omitempty,gte=0"`
+	Limit    int    `cfg:"limit" validate:"gte=0"`
 
-	client   *gitea.Client
-	pageSize int
+	client *gitea.Client
 }
 
 func (g *giteaCommon) validate() error {
@@ -33,6 +38,14 @@ func (g *giteaCommon) init() error {
 	var err error
 	if err = g.validate(); err != nil {
 		return err
+	}
+
+	if g.PageSize == 0 {
+		g.PageSize = giteaDefaultPageSize
+	}
+
+	if g.Limit == 0 {
+		g.Limit = g.PageSize
 	}
 
 	g.client, err = gitea.NewClient(g.URL)
@@ -65,6 +78,11 @@ func (g *GiteaReleases) GetRelease(release string, config interface{}) (*Release
 
 // GetReleases implements Feed
 func (g *GiteaReleases) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
+	r, e := g.getReleases(config, done)
+	return limit(r, e, g.Limit)
+}
+
+func (g *GiteaReleases) getReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
 	relChan := make(chan *Release)
 	errChan := make(chan error)
 
@@ -75,7 +93,7 @@ func (g *GiteaReleases) GetReleases(config interface{}, done chan struct{}) (cha
 		cfg := config.(*giteaConfig)
 
 		opts := gitea.ListReleasesOptions{
-			ListOptions: gitea.ListOptions{PageSize: g.pageSize},
+			ListOptions: gitea.ListOptions{PageSize: g.PageSize},
 		}
 		for {
 			releases, resp, err := g.client.ListReleases(
@@ -136,6 +154,11 @@ func (g *GiteaTags) GetRelease(release string, config interface{}) (*Release, er
 
 // GetReleases implements Feed
 func (g *GiteaTags) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
+	r, e := g.getReleases(config, done)
+	return limit(r, e, g.Limit)
+}
+
+func (g *GiteaTags) getReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
 	relChan := make(chan *Release)
 	errChan := make(chan error)
 
@@ -146,7 +169,7 @@ func (g *GiteaTags) GetReleases(config interface{}, done chan struct{}) (chan *R
 		cfg := config.(*giteaConfig)
 
 		opts := gitea.ListRepoTagsOptions{
-			ListOptions: gitea.ListOptions{PageSize: g.pageSize},
+			ListOptions: gitea.ListOptions{PageSize: g.PageSize},
 		}
 		for {
 			tags, resp, err := g.client.ListRepoTags(
