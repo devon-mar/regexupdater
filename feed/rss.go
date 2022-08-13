@@ -25,33 +25,29 @@ func (r *RSS) GetRelease(release string, config interface{}) (*Release, error) {
 }
 
 // GetReleases implements Feed
-func (g *RSS) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
-	relChan := make(chan *Release)
-	errChan := make(chan error)
-	go func() {
-		defer close(relChan)
-		defer close(errChan)
+func (r *RSS) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
+	return getReleasesWrapper(r.getReleases, config, done)
+}
 
-		cfg := config.(*rssConfig)
+func (r *RSS) getReleases(config interface{}, relChan chan *Release, errChan chan error, done chan struct{}) {
+	cfg := config.(*rssConfig)
 
-		fp := gofeed.NewParser()
-		feed, err := fp.ParseURL(cfg.URL)
-		if err != nil {
-			errChan <- err
+	fp := gofeed.NewParser()
+	feed, err := fp.ParseURL(cfg.URL)
+	if err != nil {
+		errChan <- err
+		return
+	}
+
+	for _, itm := range feed.Items {
+		select {
+		case relChan <- &Release{
+			Version:      itm.Title,
+			ReleaseNotes: itm.Content,
+			URL:          itm.Link,
+		}:
+		case <-done:
 			return
 		}
-
-		for _, itm := range feed.Items {
-			select {
-			case relChan <- &Release{
-				Version:      itm.Title,
-				ReleaseNotes: itm.Content,
-				URL:          itm.Link,
-			}:
-			case <-done:
-				return
-			}
-		}
-	}()
-	return relChan, errChan
+	}
 }

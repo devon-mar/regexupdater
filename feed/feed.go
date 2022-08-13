@@ -170,3 +170,15 @@ func limit(relChan chan *Release, errChan chan error, limit int) (chan *Release,
 	}()
 	return ourRel, ourErr
 }
+
+// getReleasesWrapper handles the release and error channel lifecycle.
+func getReleasesWrapper(f func(interface{}, chan *Release, chan error, chan struct{}), config interface{}, done chan struct{}) (chan *Release, chan error) {
+	relChan := make(chan *Release)
+	errChan := make(chan error)
+	go func() {
+		defer close(relChan)
+		defer close(errChan)
+		f(config, relChan, errChan, done)
+	}()
+	return relChan, errChan
+}

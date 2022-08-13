@@ -93,40 +93,34 @@ func (p *PyPI) GetRelease(release string, config interface{}) (*Release, error) 
 
 // GetReleases implements Feed
 func (p *PyPI) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
-	relChan := make(chan *Release)
-	errChan := make(chan error)
+	return getReleasesWrapper(p.getReleases, config, done)
+}
 
-	go func() {
-		defer close(errChan)
-		defer close(relChan)
+func (p *PyPI) getReleases(config interface{}, relChan chan *Release, errChan chan error, done chan struct{}) {
+	cfg := config.(*pypiConfig)
 
-		cfg := config.(*pypiConfig)
+	data, err := p.getProjectJSON(cfg.Project)
+	if err != nil {
+		errChan <- err
+		return
+	}
 
-		data, err := p.getProjectJSON(cfg.Project)
-		if err != nil {
-			errChan <- err
+	releases := make([]string, 0, len(data.Releases))
+	for k, v := range data.Releases {
+		if len(v) == 0 || v[0].Yanked {
+			continue
+		}
+		releases = append(releases, k)
+	}
+	sort.Slice(releases, func(i, j int) bool {
+		return data.Releases[releases[i]][0].UploadTimeIso8601.After(data.Releases[releases[j]][0].UploadTimeIso8601)
+	})
+
+	for _, r := range releases {
+		select {
+		case relChan <- data.getRelease(r):
+		case <-done:
 			return
 		}
-
-		releases := make([]string, 0, len(data.Releases))
-		for k, v := range data.Releases {
-			if len(v) == 0 || v[0].Yanked {
-				continue
-			}
-			releases = append(releases, k)
-		}
-		sort.Slice(releases, func(i, j int) bool {
-			return data.Releases[releases[i]][0].UploadTimeIso8601.After(data.Releases[releases[j]][0].UploadTimeIso8601)
-		})
-
-		for _, r := range releases {
-			select {
-			case relChan <- data.getRelease(r):
-			case <-done:
-				return
-			}
-		}
-	}()
-
-	return relChan, errChan
+	}
 }
