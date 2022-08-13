@@ -28,6 +28,9 @@ type GitHub struct {
 	Labels []string `cfg:"labels"`
 	labels []*github.Label
 
+	CommitterName  string `cfg:"committer_name"`
+	CommitterEmail string `cfg:"committer_email" validate:"required_with=CommitterName"`
+
 	client  *github.Client
 	appSlug string
 
@@ -39,6 +42,7 @@ type GitHub struct {
 func (gh *GitHub) init() error {
 	var err error
 
+	// For App auth
 	gh.GitHubOptions.Owner = gh.Owner
 	gh.GitHubOptions.Repo = gh.Repo
 	appClient, installClient, appSlug, err := githubutil.NewGitHub(&gh.GitHubOptions)
@@ -63,6 +67,13 @@ func (gh *GitHub) init() error {
 			return fmt.Errorf("error getting repository %s/%s: %v", gh.Owner, gh.Repo, err)
 		}
 		gh.BaseBranch = repo.GetDefaultBranch()
+	}
+
+	if gh.CommitterName != "" && gh.CommitterEmail != "" {
+		gh.author = &github.CommitAuthor{
+			Name:  &gh.CommitterName,
+			Email: &gh.CommitterEmail,
+		}
 	}
 	return nil
 }
