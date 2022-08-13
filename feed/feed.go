@@ -64,14 +64,10 @@ func ValidateUpdate(typ string, cfg map[string]interface{}) error {
 // Returns a new empty Feed for the given typ.
 func getFeedType(typ string) (Feed, error) {
 	switch typ {
-	case typeGitHubReleases:
-		return &GitHubReleases{}, nil
-	case typeGitHubTags:
-		return &GitHubTags{}, nil
-	case typeGiteaReleases:
-		return &GiteaReleases{}, nil
-	case typeGiteaTags:
-		return &GiteaTags{}, nil
+	case typeGitea:
+		return &Gitea{}, nil
+	case typeGitHub:
+		return &GitHub{}, nil
 	case typePyPI:
 		return &PyPI{}, nil
 	case typeRSS:

@@ -7,8 +7,7 @@ import (
 )
 
 const (
-	typeGiteaReleases = "gitea_releases"
-	typeGiteaTags     = "gitea_tags"
+	typeGitea = "gitea"
 
 	// The default page size
 	// https://docs.gitea.io/en-us/config-cheat-sheet/
@@ -18,9 +17,10 @@ const (
 type giteaConfig struct {
 	Owner string `cfg:"owner" validate:"required"`
 	Repo  string `cfg:"repo" validate:"required"`
+	Tags  bool   `cfg:"tags"`
 }
 
-type giteaCommon struct {
+type Gitea struct {
 	URL      string `cfg:"url" validate:"required,url"`
 	Owner    string `cfg:"owner" validate:"required"`
 	Repo     string `cfg:"repo" validate:"required"`
@@ -30,11 +30,11 @@ type giteaCommon struct {
 	client *gitea.Client
 }
 
-func (g *giteaCommon) validate() error {
+func (g *Gitea) validate() error {
 	return validator.New().Struct(g)
 }
 
-func (g *giteaCommon) init() error {
+func (g *Gitea) init() error {
 	var err error
 	if err = g.validate(); err != nil {
 		return err
@@ -53,18 +53,20 @@ func (g *giteaCommon) init() error {
 }
 
 // NewConfig implements Feed
-func (*giteaCommon) NewConfig(c map[string]interface{}) (interface{}, error) {
+func (*Gitea) NewConfig(c map[string]interface{}) (interface{}, error) {
 	return newConfig(c, &giteaConfig{})
 }
 
-type GiteaReleases struct {
-	giteaCommon
+// GetRelease implements Feed
+func (g *Gitea) GetRelease(release string, config interface{}) (*Release, error) {
+	cfg := config.(*giteaConfig)
+	if cfg.Tags {
+		return g.getReleaseTags(release, cfg)
+	}
+	return g.getReleaseReleases(release, cfg)
 }
 
-// GetRelease implements Feed
-func (g *GiteaReleases) GetRelease(release string, config interface{}) (*Release, error) {
-	cfg := config.(*giteaConfig)
-
+func (g *Gitea) getReleaseReleases(release string, cfg *giteaConfig) (*Release, error) {
 	rel, _, err := g.client.GetReleaseByTag(
 		cfg.Owner,
 		cfg.Repo,
@@ -77,70 +79,57 @@ func (g *GiteaReleases) GetRelease(release string, config interface{}) (*Release
 }
 
 // GetReleases implements Feed
-func (g *GiteaReleases) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
-	r, e := g.getReleases(config, done)
-	return limit(r, e, g.Limit)
-}
-
-func (g *GiteaReleases) getReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
+func (g *Gitea) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
 	relChan := make(chan *Release)
 	errChan := make(chan error)
+
+	cfg := config.(*giteaConfig)
 
 	go func() {
 		defer close(errChan)
 		defer close(relChan)
-
-		cfg := config.(*giteaConfig)
-
-		opts := gitea.ListReleasesOptions{
-			ListOptions: gitea.ListOptions{PageSize: g.PageSize},
-		}
-		for {
-			releases, resp, err := g.client.ListReleases(
-				cfg.Owner,
-				cfg.Repo,
-				opts,
-			)
-			if err != nil {
-				errChan <- err
-				return
-			}
-
-			for _, r := range releases {
-				select {
-				case relChan <- releaseFromGiteaRelease(r):
-				case <-done:
-					break
-				}
-			}
-
-			if nextPage := giteautil.NextPage(resp.Header.Get("Link")); nextPage == 0 {
-				break
-			} else {
-				opts.Page = nextPage
-			}
+		if cfg.Tags {
+			g.getReleasesTags(cfg, relChan, errChan, done)
+		} else {
+			g.getReleasesReleases(cfg, relChan, errChan, done)
 		}
 	}()
 
-	return relChan, errChan
+	return limit(relChan, errChan, g.Limit)
 }
 
-func releaseFromGiteaRelease(r *gitea.Release) *Release {
-	return &Release{
-		Version:      r.TagName,
-		ReleaseNotes: r.Note,
-		URL:          r.HTMLURL,
+func (g *Gitea) getReleasesReleases(cfg *giteaConfig, relChan chan *Release, errChan chan error, done chan struct{}) {
+	opts := gitea.ListReleasesOptions{
+		ListOptions: gitea.ListOptions{PageSize: g.PageSize},
+	}
+	for {
+		releases, resp, err := g.client.ListReleases(
+			cfg.Owner,
+			cfg.Repo,
+			opts,
+		)
+		if err != nil {
+			errChan <- err
+			return
+		}
+
+		for _, r := range releases {
+			select {
+			case relChan <- releaseFromGiteaRelease(r):
+			case <-done:
+				return
+			}
+		}
+
+		if nextPage := giteautil.NextPage(resp.Header.Get("Link")); nextPage == 0 {
+			break
+		} else {
+			opts.Page = nextPage
+		}
 	}
 }
 
-type GiteaTags struct {
-	giteaCommon
-}
-
-// GetRelease implements Feed
-func (g *GiteaTags) GetRelease(release string, config interface{}) (*Release, error) {
-	cfg := config.(*giteaConfig)
-
+func (g *Gitea) getReleaseTags(release string, cfg *giteaConfig) (*Release, error) {
 	tag, _, err := g.client.GetTag(
 		cfg.Owner,
 		cfg.Repo,
@@ -152,52 +141,42 @@ func (g *GiteaTags) GetRelease(release string, config interface{}) (*Release, er
 	return releaseFromGiteaTag(tag), nil
 }
 
-// GetReleases implements Feed
-func (g *GiteaTags) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
-	r, e := g.getReleases(config, done)
-	return limit(r, e, g.Limit)
+func (g *Gitea) getReleasesTags(cfg *giteaConfig, relChan chan *Release, errChan chan error, done chan struct{}) {
+	opts := gitea.ListRepoTagsOptions{
+		ListOptions: gitea.ListOptions{PageSize: g.PageSize},
+	}
+	for {
+		tags, resp, err := g.client.ListRepoTags(
+			cfg.Owner,
+			cfg.Repo,
+			opts,
+		)
+		if err != nil {
+			errChan <- err
+		}
+
+		for _, t := range tags {
+			select {
+			case relChan <- releaseFromGiteaTag(t):
+			case <-done:
+				return
+			}
+		}
+
+		if nextPage := giteautil.NextPage(resp.Header.Get("Link")); nextPage == 0 {
+			break
+		} else {
+			opts.Page = nextPage
+		}
+	}
 }
 
-func (g *GiteaTags) getReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
-	relChan := make(chan *Release)
-	errChan := make(chan error)
-
-	go func() {
-		defer close(errChan)
-		defer close(relChan)
-
-		cfg := config.(*giteaConfig)
-
-		opts := gitea.ListRepoTagsOptions{
-			ListOptions: gitea.ListOptions{PageSize: g.PageSize},
-		}
-		for {
-			tags, resp, err := g.client.ListRepoTags(
-				cfg.Owner,
-				cfg.Repo,
-				opts,
-			)
-			if err != nil {
-				errChan <- err
-			}
-
-			for _, t := range tags {
-				select {
-				case relChan <- releaseFromGiteaTag(t):
-				case <-done:
-					return
-				}
-			}
-
-			if nextPage := giteautil.NextPage(resp.Header.Get("Link")); nextPage == 0 {
-				break
-			} else {
-				opts.Page = nextPage
-			}
-		}
-	}()
-
-	return relChan, errChan
+func releaseFromGiteaRelease(r *gitea.Release) *Release {
+	return &Release{
+		Version:      r.TagName,
+		ReleaseNotes: r.Note,
+		URL:          r.HTMLURL,
+	}
 }
 
 func releaseFromGiteaTag(t *gitea.Tag) *Release {

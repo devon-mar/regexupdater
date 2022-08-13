@@ -9,16 +9,16 @@ import (
 )
 
 const (
-	typeGitHubReleases = "github_releases"
-	typeGitHubTags     = "github_tags"
+	typeGitHub = "github"
 )
 
 type gitHubConfig struct {
 	Owner string `cfg:"owner" validate:"required"`
 	Repo  string `cfg:"repo" validate:"required"`
+	Tags  bool   `cfg:"tags"`
 }
 
-type gitHubCommon struct {
+type GitHub struct {
 	githubutil.GitHubOptions `cfg:",squash"`
 	PageSize                 int `cfg:"page_size" validate:"omitempty,gte=0"`
 	Limit                    int `cfg:"limit" validate:"gte=0"`
@@ -26,7 +26,7 @@ type gitHubCommon struct {
 	client *github.Client
 }
 
-func (g *gitHubCommon) init() error {
+func (g *GitHub) init() error {
 	var err error
 
 	if g.PageSize == 0 {
@@ -42,18 +42,21 @@ func (g *gitHubCommon) init() error {
 	return err
 }
 
-type GitHubReleases struct {
-	gitHubCommon
-}
-
 // NewConfig implements Feed
-func (*gitHubCommon) NewConfig(c map[string]interface{}) (interface{}, error) {
+func (*GitHub) NewConfig(c map[string]interface{}) (interface{}, error) {
 	return newConfig(c, &gitHubConfig{})
 }
 
 // GetRelease implements Feed
-func (g *GitHubReleases) GetRelease(release string, config interface{}) (*Release, error) {
+func (g *GitHub) GetRelease(release string, config interface{}) (*Release, error) {
 	cfg := config.(*gitHubConfig)
+	if cfg.Tags {
+		return g.getReleaseTags(release, cfg)
+	}
+	return g.getReleaseReleases(release, cfg)
+}
+
+func (g *GitHub) getReleaseReleases(release string, cfg *gitHubConfig) (*Release, error) {
 	rel, _, err := g.client.Repositories.GetReleaseByTag(
 		context.Background(),
 		cfg.Owner,
@@ -66,71 +69,7 @@ func (g *GitHubReleases) GetRelease(release string, config interface{}) (*Releas
 	return releaseFromGHRelease(rel), nil
 }
 
-// GetReleases implements Feed
-func (g *GitHubReleases) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
-	r, e := g.getReleases(config, done)
-	return limit(r, e, g.Limit)
-}
-
-func (g *GitHubReleases) getReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
-	relChan := make(chan *Release)
-	errChan := make(chan error)
-
-	go func() {
-		defer close(errChan)
-		defer close(relChan)
-
-		cfg := config.(*gitHubConfig)
-
-		listOpts := &github.ListOptions{
-			PerPage: g.PageSize,
-		}
-		for {
-			releases, resp, err := g.client.Repositories.ListReleases(
-				context.Background(),
-				cfg.Owner,
-				cfg.Repo,
-				listOpts,
-			)
-			if err != nil {
-				errChan <- err
-				return
-			}
-
-			for _, r := range releases {
-				select {
-
-				case relChan <- releaseFromGHRelease(r):
-				case <-done:
-					return
-				}
-			}
-
-			if resp.NextPage == 0 {
-				break
-			}
-			listOpts.Page = resp.NextPage
-		}
-	}()
-	return relChan, errChan
-}
-
-func releaseFromGHRelease(r *github.RepositoryRelease) *Release {
-	return &Release{
-		Version:      r.GetTagName(),
-		ReleaseNotes: r.GetBody(),
-		URL:          r.GetHTMLURL(),
-	}
-}
-
-type GitHubTags struct {
-	gitHubCommon
-}
-
-// GetRelease implements Feed
-func (g *GitHubTags) GetRelease(release string, config interface{}) (*Release, error) {
-	cfg := config.(*gitHubConfig)
-
+func (g *GitHub) getReleaseTags(release string, cfg *gitHubConfig) (*Release, error) {
 	ref, _, err := g.client.Git.GetRef(
 		context.Background(),
 		cfg.Owner,
@@ -165,57 +104,100 @@ func (g *GitHubTags) GetRelease(release string, config interface{}) (*Release, e
 }
 
 // GetReleases implements Feed
-func (g *GitHubTags) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
-	r, e := g.getReleases(config, done)
-	return limit(r, e, g.Limit)
-}
-
-func (g *GitHubTags) getReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
+func (g *GitHub) GetReleases(config interface{}, done chan struct{}) (chan *Release, chan error) {
 	relChan := make(chan *Release)
 	errChan := make(chan error)
+
+	cfg := config.(*gitHubConfig)
 
 	go func() {
 		defer close(errChan)
 		defer close(relChan)
-
-		cfg := config.(*gitHubConfig)
-
-		listOpts := &github.ListOptions{
-			PerPage: g.PageSize,
-		}
-		for {
-			tags, resp, err := g.client.Repositories.ListTags(
-				context.Background(),
-				cfg.Owner,
-				cfg.Repo,
-				listOpts,
-			)
-			if err != nil {
-				errChan <- err
-				return
-			}
-
-			for _, t := range tags {
-				var url string
-				if t.Commit != nil && t.Commit.HTMLURL != nil {
-					url = *t.Commit.HTMLURL
-				}
-				rel := &Release{
-					Version: t.GetName(),
-					URL:     url,
-				}
-				select {
-				case relChan <- rel:
-				case <-done:
-					return
-				}
-			}
-
-			if resp.NextPage == 0 {
-				break
-			}
-			listOpts.Page = resp.NextPage
+		if cfg.Tags {
+			g.getReleasesTags(cfg, relChan, errChan, done)
+		} else {
+			g.getReleasesReleases(cfg, relChan, errChan, done)
 		}
 	}()
-	return relChan, errChan
+
+	return limit(relChan, errChan, g.Limit)
+}
+
+func (g *GitHub) getReleasesReleases(cfg *gitHubConfig, relChan chan *Release, errChan chan error, done chan struct{}) {
+	listOpts := &github.ListOptions{
+		PerPage: g.PageSize,
+	}
+	for {
+		releases, resp, err := g.client.Repositories.ListReleases(
+			context.Background(),
+			cfg.Owner,
+			cfg.Repo,
+			listOpts,
+		)
+		if err != nil {
+			errChan <- err
+			return
+		}
+
+		for _, r := range releases {
+			select {
+
+			case relChan <- releaseFromGHRelease(r):
+			case <-done:
+				return
+			}
+		}
+
+		if resp.NextPage == 0 {
+			break
+		}
+		listOpts.Page = resp.NextPage
+	}
+}
+
+func (g *GitHub) getReleasesTags(cfg *gitHubConfig, relChan chan *Release, errChan chan error, done chan struct{}) {
+	listOpts := &github.ListOptions{
+		PerPage: g.PageSize,
+	}
+	for {
+		tags, resp, err := g.client.Repositories.ListTags(
+			context.Background(),
+			cfg.Owner,
+			cfg.Repo,
+			listOpts,
+		)
+		if err != nil {
+			errChan <- err
+			return
+		}
+
+		for _, t := range tags {
+			var url string
+			if t.Commit != nil && t.Commit.HTMLURL != nil {
+				url = *t.Commit.HTMLURL
+			}
+			rel := &Release{
+				Version: t.GetName(),
+				URL:     url,
+			}
+			select {
+			case relChan <- rel:
+			case <-done:
+				return
+			}
+		}
+
+		if resp.NextPage == 0 {
+			break
+		}
+		listOpts.Page = resp.NextPage
+	}
+}
+
+func releaseFromGHRelease(r *github.RepositoryRelease) *Release {
+	return &Release{
+		Version:      r.GetTagName(),
+		ReleaseNotes: r.GetBody(),
+		URL:          r.GetHTMLURL(),
+	}
 }
