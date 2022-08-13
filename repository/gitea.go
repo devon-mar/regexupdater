@@ -18,12 +18,7 @@ const (
 )
 
 type Gitea struct {
-	URL string `cfg:"url" validate:"required"`
-	// Basic Auth
-	Username string `cfg:"username"`
-	Password string `cfg:"password" validate:"required_with=Username"`
-	// Token Auth
-	Token string `cfg:"token" validate:"required_without=Username"`
+	giteautil.ClientOptions `cfg:",squash"`
 
 	CommitterName  string `cfg:"committer_name"`
 	CommitterEmail string `cfg:"committer_email" validate:"required_with=CommitterName"`
@@ -44,13 +39,7 @@ type Gitea struct {
 func (g *Gitea) init() error {
 	var err error
 
-	opts := []gitea.ClientOption{}
-	if g.Token != "" {
-		opts = append(opts, gitea.SetToken(g.Token))
-	} else if g.Username != "" && g.Password != "" {
-		opts = append(opts, gitea.SetBasicAuth(g.Username, g.Password))
-	}
-	g.client, err = gitea.NewClient(g.URL, opts...)
+	g.client, err = giteautil.NewClient(g.ClientOptions)
 	if err != nil {
 		return fmt.Errorf("error initializing Gitea client")
 	}

@@ -3,7 +3,6 @@ package feed
 import (
 	"code.gitea.io/sdk/gitea"
 	"github.com/devon-mar/regexupdater/utils/giteautil"
-	"github.com/go-playground/validator/v10"
 )
 
 const (
@@ -21,24 +20,16 @@ type giteaConfig struct {
 }
 
 type Gitea struct {
-	URL      string `cfg:"url" validate:"required,url"`
-	Owner    string `cfg:"owner" validate:"required"`
-	Repo     string `cfg:"repo" validate:"required"`
-	PageSize int    `cfg:"page_size" validate:"omitempty,gte=0"`
-	Limit    int    `cfg:"limit" validate:"gte=0"`
+	giteautil.ClientOptions `cfg:",squash"`
+
+	PageSize int `cfg:"page_size" validate:"omitempty,gte=0"`
+	Limit    int `cfg:"limit" validate:"gte=0"`
 
 	client *gitea.Client
 }
 
-func (g *Gitea) validate() error {
-	return validator.New().Struct(g)
-}
-
 func (g *Gitea) init() error {
 	var err error
-	if err = g.validate(); err != nil {
-		return err
-	}
 
 	if g.PageSize == 0 {
 		g.PageSize = giteaDefaultPageSize
@@ -48,7 +39,7 @@ func (g *Gitea) init() error {
 		g.Limit = g.PageSize
 	}
 
-	g.client, err = gitea.NewClient(g.URL)
+	g.client, err = giteautil.NewClient(g.ClientOptions)
 	return err
 }
 
