@@ -45,7 +45,7 @@ func (p *pypiJSON) GetRelease(version string) *Release {
 }
 
 type PyPI struct {
-	URL string `cfg:"url" validate:"required,url"`
+	URL string `cfg:"url" validate:"omitempty,url"`
 }
 
 func (p *PyPI) init() error {
