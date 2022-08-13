@@ -23,10 +23,10 @@ type Config struct {
 }
 
 type templateConfig struct {
-	PRTitle   string `mapstructure:"pr_title"`
-	PRBody    string `mapstructure:"pr_body"`
-	CommitMsg string `mapstructure:"commit_msg"`
-	Branch    string `mapstructure:"branch"`
+	PRTitle   string `yaml:"pr_title"`
+	PRBody    string `yaml:"pr_body"`
+	CommitMsg string `yaml:"commit_msg"`
+	Branch    string `yaml:"branch"`
 }
 
 func (c *Config) init() error {
@@ -99,15 +99,15 @@ func (r *Replace) Do(s string) string {
 }
 
 type updateConfig struct {
-	Name  string `validate:"required"`
-	Path  string `validate:"required"`
-	Regex string `validate:"required"`
+	Name  string `yaml:"name" validate:"required"`
+	Path  string `yaml:"path" validate:"required"`
+	Regex string `yaml:"regex" validate:"required"`
 
-	Feed updateFeedConfig `validate:"required"`
+	Feed updateFeedConfig `yaml:"feed" validate:"required"`
 
 	IsNotSemver bool `yaml:"is_not_semver"`
 
-	UseSemver bool
+	UseSemver bool `yaml:"use_semver"`
 
 	PreReplace    *Replace             `yaml:"pre_replace"`
 	SecondaryFeed *SecondaryFeedConfig `yaml:"secondary_feed"`
