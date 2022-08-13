@@ -16,7 +16,6 @@ type GitHubOptions struct {
 	AppPrivateKey       string `cfg:"app_private_key" validate:"omitempty,required_without=Token"`
 	AppPrivateKeyPath   string `cfg:"app_private_key_path" validate:"omitempty,file,required_without=Token"`
 	AppID               int64  `cfg:"app_id" validate:"omitempty,required_with=AppPrivateKey"`
-	AppInstallationID   int64  `cfg:"app_installation_id"`
 	EnterpriseURL       string `cfg:"enterprise_url" validate:"omitempty,url"`
 	EnterpriseUploadURL string `cfg:"enterprise_upload_url" validate:"omitempty,url,required_with=EnterpriseURL"`
 
