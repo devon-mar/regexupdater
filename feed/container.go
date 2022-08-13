@@ -31,9 +31,6 @@ type ContainerRegistry struct {
 
 func (c *ContainerRegistry) init() error {
 	c.URL = strings.TrimRight(c.URL, "/")
-	if c.Limit == 0 {
-		c.Limit = c.PageSize
-	}
 	return nil
 }
 
