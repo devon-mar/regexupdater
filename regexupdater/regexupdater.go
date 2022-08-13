@@ -177,7 +177,7 @@ func (ru *RegexUpdater) Process(u *updateConfig, logger *log.Entry) error {
 	if existingPR != nil {
 		prMeta = parsePRMeta(existingPR.Body())
 	}
-	if prMeta.Version == currentVer.String() {
+	if existingPR != nil && existingPR.IsOpen() && prMeta.Version == currentVer.String() {
 		logger.Infof("Closing existing PR %s (redundant)", existingPR.ID())
 		err := ru.repo.AddPRComment(existingPR, fmt.Sprintf("`%s` is already using this version. This PR is no longer necessary.", u.Name))
 		if err != nil {

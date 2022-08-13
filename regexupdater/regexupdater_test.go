@@ -785,6 +785,14 @@ three: v1.4.0
 			},
 			f: newTestFeed(),
 		},
+		"closed PR for version in the file": {
+			u: newTestUpdate(`(.*)`),
+			r: &testRepository{
+				content: "1.3.0",
+				prs:     []*testPR{{prMeta: prMetadata{ID: testUpdateID, Version: "1.3.0"}}},
+			},
+			f: newTestFeed(),
+		},
 		"PR for version in the file with update as well": {
 			u: newTestUpdate(`(.*)`),
 			r: &testRepository{
@@ -804,9 +812,6 @@ three: v1.4.0
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			if name == "semver update" {
-				t.Log("debug")
-			}
 			var err error
 			if tc.ru == nil {
 				tc.ru, err = NewUpdater(&Config{})
