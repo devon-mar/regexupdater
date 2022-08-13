@@ -14,6 +14,10 @@ const (
 	pypiURL  = "https://pypi.org"
 )
 
+type pypiConfig struct {
+	Project string `cfg:"project" validate:"required"`
+}
+
 type pypiJSON struct {
 	Info struct {
 		ProjectURL string `json:"project_url"`
@@ -26,7 +30,7 @@ type pypiJSON struct {
 	} `json:"releases"`
 }
 
-func (p *pypiJSON) GetRelease(version string) *Release {
+func (p *pypiJSON) getRelease(version string) *Release {
 	rel, ok := p.Releases[version]
 	if !ok {
 		return nil
@@ -61,10 +65,6 @@ func (*PyPI) NewConfig(c map[string]interface{}) (interface{}, error) {
 	return newConfig(c, &pypiConfig{})
 }
 
-type pypiConfig struct {
-	Project string `cfg:"project" validate:"required"`
-}
-
 func (p *PyPI) getProjectJSON(project string) (*pypiJSON, error) {
 	client := &http.Client{Timeout: 10 * time.Second}
 	resp, err := client.Get(fmt.Sprintf("%s/pypi/%s/json", p.URL, project))
@@ -88,7 +88,7 @@ func (p *PyPI) GetRelease(release string, config interface{}) (*Release, error) 
 		return nil, err
 	}
 
-	return data.GetRelease(release), nil
+	return data.getRelease(release), nil
 }
 
 // GetReleases implements Feed
@@ -121,7 +121,7 @@ func (p *PyPI) GetReleases(config interface{}, done chan struct{}) (chan *Releas
 
 		for _, r := range releases {
 			select {
-			case relChan <- data.GetRelease(r):
+			case relChan <- data.getRelease(r):
 			case <-done:
 				return
 			}
