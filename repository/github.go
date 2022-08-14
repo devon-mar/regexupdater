@@ -14,8 +14,7 @@ import (
 const (
 	typeGitHub = "github"
 
-	githubPRStateOpen   = "open"
-	githubPRStateClosed = "closed"
+	githubPRStateOpen = "open"
 )
 
 type GitHub struct {
@@ -294,19 +293,13 @@ func (gh *GitHub) AddPRComment(pr PullRequest, body string) error {
 
 // ClosePR implements Repository
 func (gh *GitHub) ClosePR(pr PullRequest) error {
-	state := githubPRStateClosed
+	// Deleting the branch will implicitly close the PR.
 	gpr := pr.(*GitHubPR)
-	_, _, err := gh.client.PullRequests.Edit(
-		context.Background(),
-		gh.Owner,
-		gh.Repo,
-		gpr.pr.GetNumber(),
-		&github.PullRequest{State: &state},
-	)
-	if err != nil {
-		gpr.wasClosed = true
+	if err := gh.deletePRBranch(gpr.pr); err != nil {
+		return err
 	}
-	return err
+	gpr.wasClosed = true
+	return nil
 }
 
 func (gh *GitHub) deleteBranch(name string) error {
@@ -352,6 +345,13 @@ func (gh *GitHub) RebasePR(pr PullRequest, path string, oldSHA string, newConten
 	return gh.deleteBranch(branch)
 }
 
+func (gh *GitHub) deletePRBranch(pr *github.PullRequest) error {
+	if pr.Head == nil || pr.Head.Ref == nil {
+		return errors.New("PR head ref is nil")
+	}
+	return gh.deleteBranch(*pr.Head.Ref)
+}
+
 // DeletePRBranch implements Repository
 func (gh *GitHub) DeletePRBranch(prID string) (string, error) {
 	prNumber, err := strconv.Atoi(prID)
@@ -368,10 +368,7 @@ func (gh *GitHub) DeletePRBranch(prID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if pr.Head == nil || pr.Head.Ref == nil {
-		return "", errors.New("PR head ref is nil")
-	}
-	return *pr.Head.Ref, gh.deleteBranch(*pr.Head.Ref)
+	return *pr.Head.Ref, gh.deletePRBranch(pr)
 }
 
 type GitHubFile struct {

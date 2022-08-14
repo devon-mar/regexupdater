@@ -215,18 +215,17 @@ func (g *Gitea) AddPRComment(pr PullRequest, body string) error {
 
 // ClosePR implements Repository
 func (g *Gitea) ClosePR(pr PullRequest) error {
-	state := gitea.StateClosed
 	gpr := pr.(*GiteaPR)
-	_, _, err := g.client.EditPullRequest(
-		g.Owner,
-		g.Repo,
-		gpr.pr.Index,
-		gitea.EditPullRequestOption{State: &state},
-	)
+	// Deleting the branch will implicitly close the PR.
+	ok, _, err := g.client.DeleteRepoBranch(g.Owner, g.Repo, gpr.pr.Head.Name)
 	if err != nil {
-		gpr.wasClosed = true
+		return err
 	}
-	return err
+	if !ok {
+		return errors.New("gitea did not return ok")
+	}
+	gpr.wasClosed = true
+	return nil
 }
 
 // RebasePR implements Repository
