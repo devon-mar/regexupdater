@@ -1,6 +1,8 @@
 package feed
 
 import (
+	"net/http"
+
 	"code.gitea.io/sdk/gitea"
 	"github.com/devon-mar/regexupdater/utils/giteautil"
 )
@@ -59,12 +61,14 @@ func (g *Gitea) GetRelease(release string, config interface{}) (*Release, error)
 }
 
 func (g *Gitea) getReleaseReleases(release string, cfg *giteaConfig) (*Release, error) {
-	rel, _, err := g.client.GetReleaseByTag(
+	rel, resp, err := g.client.GetReleaseByTag(
 		cfg.Owner,
 		cfg.Repo,
 		release,
 	)
-	if err != nil {
+	if err != nil && resp != nil && resp.StatusCode == http.StatusNotFound {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 	if rel.IsPrerelease && !cfg.IncludePrereleases {
@@ -128,12 +132,14 @@ func (g *Gitea) getReleasesReleases(cfg *giteaConfig, relChan chan *Release, err
 }
 
 func (g *Gitea) getReleaseTags(release string, cfg *giteaConfig) (*Release, error) {
-	tag, _, err := g.client.GetTag(
+	tag, resp, err := g.client.GetTag(
 		cfg.Owner,
 		cfg.Repo,
 		release,
 	)
-	if err != nil {
+	if err != nil && resp != nil && resp.StatusCode == 404 {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 	return releaseFromGiteaTag(tag), nil

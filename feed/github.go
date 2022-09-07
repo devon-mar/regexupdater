@@ -3,6 +3,7 @@ package feed
 import (
 	"context"
 	"errors"
+	"net/http"
 
 	"github.com/devon-mar/regexupdater/utils/githubutil"
 	"github.com/google/go-github/v45/github"
@@ -58,13 +59,15 @@ func (g *GitHub) GetRelease(release string, config interface{}) (*Release, error
 }
 
 func (g *GitHub) getReleaseReleases(release string, cfg *gitHubConfig) (*Release, error) {
-	rel, _, err := g.client.Repositories.GetReleaseByTag(
+	rel, resp, err := g.client.Repositories.GetReleaseByTag(
 		context.Background(),
 		cfg.Owner,
 		cfg.Repo,
 		release,
 	)
-	if err != nil {
+	if err != nil && resp != nil && resp.StatusCode == http.StatusNotFound {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 	if rel.GetPrerelease() && !cfg.IncludePrereleases {
@@ -74,13 +77,15 @@ func (g *GitHub) getReleaseReleases(release string, cfg *gitHubConfig) (*Release
 }
 
 func (g *GitHub) getReleaseTags(release string, cfg *gitHubConfig) (*Release, error) {
-	ref, _, err := g.client.Git.GetRef(
+	ref, resp, err := g.client.Git.GetRef(
 		context.Background(),
 		cfg.Owner,
 		cfg.Repo,
 		"tags/"+release,
 	)
-	if err != nil {
+	if err != nil && resp != nil && resp.StatusCode == http.StatusNotFound {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 
