@@ -1,0 +1,16 @@
+---
+site_name: Regex Updater
+theme:
+  name: material
+  features:
+    - navigation.indexes
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+
