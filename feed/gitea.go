@@ -14,9 +14,10 @@ const (
 )
 
 type giteaConfig struct {
-	Owner string `cfg:"owner" validate:"required"`
-	Repo  string `cfg:"repo" validate:"required"`
-	Tags  bool   `cfg:"tags"`
+	Owner              string `cfg:"owner" validate:"required"`
+	Repo               string `cfg:"repo" validate:"required"`
+	Tags               bool   `cfg:"tags"`
+	IncludePrereleases bool   `cfg:"include_prereleases"`
 }
 
 type Gitea struct {
@@ -66,6 +67,9 @@ func (g *Gitea) getReleaseReleases(release string, cfg *giteaConfig) (*Release, 
 	if err != nil {
 		return nil, err
 	}
+	if rel.IsPrerelease && !cfg.IncludePrereleases {
+		return nil, nil
+	}
 	return releaseFromGiteaRelease(rel), err
 }
 
@@ -105,6 +109,9 @@ func (g *Gitea) getReleasesReleases(cfg *giteaConfig, relChan chan *Release, err
 		}
 
 		for _, r := range releases {
+			if r.IsPrerelease && !cfg.IncludePrereleases {
+				continue
+			}
 			select {
 			case relChan <- releaseFromGiteaRelease(r):
 			case <-done:

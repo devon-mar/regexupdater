@@ -23,4 +23,5 @@ owner: <string>
 repo: <string>
 # Use tags instead of releases.
 [ tags: <bool> | default = false ]
+[ include_prereleases: <bool> | default = false ]
 ```

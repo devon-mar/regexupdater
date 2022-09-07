@@ -13,9 +13,10 @@ const (
 )
 
 type gitHubConfig struct {
-	Owner string `cfg:"owner" validate:"required"`
-	Repo  string `cfg:"repo" validate:"required"`
-	Tags  bool   `cfg:"tags"`
+	Owner              string `cfg:"owner" validate:"required"`
+	Repo               string `cfg:"repo" validate:"required"`
+	Tags               bool   `cfg:"tags"`
+	IncludePrereleases bool   `cfg:"include_prereleases"`
 }
 
 type GitHub struct {
@@ -65,6 +66,9 @@ func (g *GitHub) getReleaseReleases(release string, cfg *gitHubConfig) (*Release
 	)
 	if err != nil {
 		return nil, err
+	}
+	if rel.GetPrerelease() && !cfg.IncludePrereleases {
+		return nil, nil
 	}
 	return releaseFromGHRelease(rel), nil
 }
@@ -140,8 +144,10 @@ func (g *GitHub) getReleasesReleases(cfg *gitHubConfig, relChan chan *Release, e
 		}
 
 		for _, r := range releases {
+			if r.GetPrerelease() && !cfg.IncludePrereleases {
+				continue
+			}
 			select {
-
 			case relChan <- releaseFromGHRelease(r):
 			case <-done:
 				return
