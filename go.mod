@@ -11,7 +11,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/sirupsen/logrus v1.9.0
-	github.com/spf13/cobra v1.6.1
+	github.com/spf13/cobra v1.7.0
 	golang.org/x/exp v0.0.0-20220713135740-79cabaa25d75
 	golang.org/x/oauth2 v0.6.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -29,7 +29,7 @@ require (
 	github.com/google/go-github/v50 v50.2.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/go-version v1.2.1 // indirect
-	github.com/inconshreveable/mousetrap v1.0.1 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.3 // indirect
 	github.com/mmcdole/goxpp v1.1.0 // indirect
