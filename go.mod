@@ -5,7 +5,7 @@ go 1.18
 require (
 	code.gitea.io/sdk/gitea v0.15.1
 	github.com/Masterminds/semver/v3 v3.2.1
-	github.com/bradleyfalzon/ghinstallation/v2 v2.3.0
+	github.com/bradleyfalzon/ghinstallation/v2 v2.4.0
 	github.com/go-playground/validator/v10 v10.13.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/mitchellh/mapstructure v1.5.0
@@ -26,7 +26,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-github/v50 v50.2.0 // indirect
+	github.com/google/go-github/v52 v52.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/go-version v1.2.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
