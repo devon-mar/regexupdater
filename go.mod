@@ -3,7 +3,7 @@ module github.com/devon-mar/regexupdater
 go 1.18
 
 require (
-	code.gitea.io/sdk/gitea v0.15.1
+	code.gitea.io/sdk/gitea v0.16.0
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/bradleyfalzon/ghinstallation/v2 v2.6.0
 	github.com/go-playground/validator/v10 v10.15.3
@@ -22,14 +22,16 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/cloudflare/circl v1.3.3 // indirect
+	github.com/davidmz/go-pageant v1.0.2 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
+	github.com/go-fed/httpsig v1.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-github/v53 v53.2.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/hashicorp/go-version v1.2.1 // indirect
+	github.com/hashicorp/go-version v1.5.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
