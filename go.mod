@@ -11,7 +11,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/sirupsen/logrus v1.9.3
-	github.com/spf13/cobra v1.7.0
+	github.com/spf13/cobra v1.8.0
 	golang.org/x/exp v0.0.0-20220713135740-79cabaa25d75
 	golang.org/x/oauth2 v0.13.0
 	gopkg.in/yaml.v3 v3.0.1
