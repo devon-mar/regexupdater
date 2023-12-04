@@ -3,7 +3,7 @@ module github.com/devon-mar/regexupdater
 go 1.18
 
 require (
-	code.gitea.io/sdk/gitea v0.16.0
+	code.gitea.io/sdk/gitea v0.17.0
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/bradleyfalzon/ghinstallation/v2 v2.8.0
 	github.com/go-playground/validator/v10 v10.16.0
