@@ -6,7 +6,7 @@ require (
 	code.gitea.io/sdk/gitea v0.17.1
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/bradleyfalzon/ghinstallation/v2 v2.9.0
-	github.com/go-playground/validator/v10 v10.16.0
+	github.com/go-playground/validator/v10 v10.17.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mmcdole/gofeed v1.2.1
