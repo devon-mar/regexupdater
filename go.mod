@@ -9,7 +9,7 @@ require (
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/mmcdole/gofeed v1.2.1
+	github.com/mmcdole/gofeed v1.3.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
 	golang.org/x/exp v0.0.0-20220713135740-79cabaa25d75
@@ -33,7 +33,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
-	github.com/mmcdole/goxpp v1.1.0 // indirect
+	github.com/mmcdole/goxpp v1.1.1-0.20240225020742-a0c311522b23 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
