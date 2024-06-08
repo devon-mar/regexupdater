@@ -5,13 +5,13 @@ import (
 	"crypto/sha256"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strings"
 	"text/template"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/devon-mar/regexupdater/feed"
 	"github.com/devon-mar/regexupdater/repository"
-	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -139,7 +139,7 @@ func ValidateConfig(c *Config) error {
 	return err
 }
 
-func (ru *RegexUpdater) Process(u *updateConfig, logger *log.Entry) error {
+func (ru *RegexUpdater) Process(u *updateConfig, logger *slog.Logger) error {
 	file, err := ru.repo.GetFile(u.Path)
 	if err != nil {
 		return fmt.Errorf("Error retrieving file: %w", err)
@@ -178,7 +178,7 @@ func (ru *RegexUpdater) Process(u *updateConfig, logger *log.Entry) error {
 		prMeta = parsePRMeta(existingPR.Body())
 	}
 	if existingPR != nil && existingPR.IsOpen() && prMeta.Version == currentVer.String() {
-		logger.Infof("Closing existing PR %s (redundant)", existingPR.ID())
+		logger.Info("Closing existing PR (redundant)", "existingPR", existingPR.ID())
 		err := ru.repo.AddPRComment(existingPR, fmt.Sprintf("`%s` is already using this version. This PR is no longer necessary.", u.Name))
 		if err != nil {
 			return fmt.Errorf("error leaving comment on PR %s: %w", existingPR.ID(), err)
@@ -204,11 +204,11 @@ func (ru *RegexUpdater) Process(u *updateConfig, logger *log.Entry) error {
 		return fmt.Errorf("error checking secondary feed: %w", err)
 	}
 	if !secondaryHasRel {
-		logger.Warnf("Secondary feed does not have version %q", newRel.version.V)
+		logger.Warn("Secondary feed does not have version", "version", newRel.version.V)
 		return nil
 	}
 
-	logger.Infof("Updating from %q to %q", currentVer, newRel.version)
+	logger.Info("Updating from", "oldVersion", currentVer, "newVersion", newRel.version)
 
 	var replaceWith string
 	if u.UseSemver {
@@ -239,9 +239,10 @@ func (ru *RegexUpdater) Process(u *updateConfig, logger *log.Entry) error {
 	}
 
 	if existingPR != nil {
+		logger = slog.With("existingPR", existingPR.ID())
 		if prMeta.ID != "" && prMeta.Version != "" {
 			if prMeta.Version == newRel.version.String() {
-				logger.Infof("Found existing PR %s for the same version", existingPR.ID())
+				logger.Info("Found existing PR for the same version")
 				if existingPR.IsOpen() {
 					if err := ru.fixIfUnmergeable(file, existingPR, newContent, data, logger); err != nil {
 						return fmt.Errorf("error fixing unmergeable PR: %v", err)
@@ -251,17 +252,17 @@ func (ru *RegexUpdater) Process(u *updateConfig, logger *log.Entry) error {
 			} else if !existingPR.IsOpen() {
 				// The PR is for a different version but closed.
 				// Therefore, we can ignore it.
-				logger.Infof("Found closed PR %s for (older) version %s", existingPR.ID(), prMeta.Version)
+				logger.Info("Found closed PR for (older) version", "version", prMeta.Version)
 			} else if u.ExistingPR == existingPRStop {
-				logger.Infof("Found PR %s for an older version and the action is STOP.", existingPR.ID())
+				logger.Info("Found PR for an older version and the action is STOP.")
 				return nil
 			} else if u.ExistingPR == existingPRClose {
-				logger.Infof("Closing PR %s for an older version", existingPR.ID())
+				logger.Info("Closing PR for an older version")
 				closeExistingPR = true
 			}
 			// the default action is 'ignore"...
 		} else {
-			logger.Warnf("Exisiting PR %s metadata is invalid", existingPR.ID())
+			logger.Warn("Exisiting PR metadata is invalid")
 		}
 	}
 
@@ -280,7 +281,7 @@ func (ru *RegexUpdater) Process(u *updateConfig, logger *log.Entry) error {
 	return nil
 }
 
-func (ru *RegexUpdater) findNewRelease(u *updateConfig, currentVer version, logger *log.Entry) (*releaseInfo, error) {
+func (ru *RegexUpdater) findNewRelease(u *updateConfig, currentVer version, logger *slog.Logger) (*releaseInfo, error) {
 	feed := ru.feeds[u.Feed.Name]
 
 	done := make(chan struct{})
@@ -323,7 +324,7 @@ func (ru *RegexUpdater) findNewRelease(u *updateConfig, currentVer version, logg
 }
 
 // Returns the version string and optional semver if the release matches the constraints.
-func (ru *RegexUpdater) checkRelease(r *feed.Release, currentVer version, u *updateConfig, logger *log.Entry) (*releaseInfo, error) {
+func (ru *RegexUpdater) checkRelease(r *feed.Release, currentVer version, u *updateConfig, logger *slog.Logger) (*releaseInfo, error) {
 	ri := &releaseInfo{release: r}
 
 	ri.version.V = u.PreReplace.Do(r.Version)
@@ -344,19 +345,20 @@ func (ru *RegexUpdater) checkRelease(r *feed.Release, currentVer version, u *upd
 	}
 
 	if ri.version.SV.Prerelease() != "" && !u.Prerelease {
-		logger.Infof("Skipping version %s: is a prerelease", ri.version.SV.String())
+		logger.Info("Skipping version: is a prerelease", "version", ri.version.SV.String())
 		return nil, nil
 	}
 
 	cmp := currentVer.SV.Compare(ri.version.SV)
 
+	logger = logger.With("version", ri.version.SV, "current", currentVer.SV)
 	if cmp == 0 {
-		logger.Debugf("%s == %s", ri.version.SV.String(), currentVer.SV.String())
+		logger.Debug("version is ==")
 		ri.older = true
 	} else if cmp < 0 {
-		logger.Debugf("%s > %s", ri.version.SV.String(), currentVer.SV.String())
+		logger.Debug("version is >")
 	} else {
-		logger.Debugf("%s < %s", ri.version.SV.String(), currentVer.SV.String())
+		logger.Debug("version is <")
 		ri.older = true
 	}
 	return ri, nil
@@ -368,7 +370,7 @@ func templateString(t *template.Template, data any) (string, error) {
 	return buf.String(), err
 }
 
-func (ru *RegexUpdater) createPR(data any, file repository.File, newContent []byte, meta prMetadata, logger *log.Entry) (string, error) {
+func (ru *RegexUpdater) createPR(data any, file repository.File, newContent []byte, meta prMetadata, logger *slog.Logger) (string, error) {
 	title, err := templateString(ru.prTitleTemplate, data)
 	if err != nil {
 		return "", err
@@ -390,18 +392,18 @@ func (ru *RegexUpdater) createPR(data any, file repository.File, newContent []by
 	}
 
 	if ru.isDry {
-		logger.Infof("DRY RUN: Creating PR %q, updating file %q", title, file.Path())
+		logger.Info("DRY RUN: Creating PR and updating file", "prTitle", title, "file", file.Path())
 		return "", nil
 	}
 
 	prID, err := ru.repo.UpdateFilePR(file.Path(), file.SHA(), newContent, commitMsg, newBranch, title, body)
-	logger.Infof("Created PR %s", prID)
+	logger.Info("Created PR", "pr", prID)
 	return prID, err
 }
 
-func (ru *RegexUpdater) supersedePR(newID string, oldPR repository.PullRequest, logger *log.Entry) error {
+func (ru *RegexUpdater) supersedePR(newID string, oldPR repository.PullRequest, logger *slog.Logger) error {
 	if ru.isDry {
-		logger.Infof("DRY RUN: Superseding PR %s with %s", oldPR.ID(), newID)
+		logger.Info("DRY RUN: Superseding PR", "oldPR", oldPR.ID(), "newPR", newID)
 		return nil
 	}
 
@@ -426,11 +428,14 @@ func getUpdateID(s string) string {
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(s)))
 }
 
-func (ru *RegexUpdater) fixIfUnmergeable(file repository.File, pr repository.PullRequest, newContent []byte, templateData any, logger *log.Entry) error {
+func (ru *RegexUpdater) fixIfUnmergeable(file repository.File, pr repository.PullRequest, newContent []byte, templateData any, logger *slog.Logger) error {
 	if pr.IsMergeable() {
 		return nil
 	}
-	logger.Infof("PR %s is unmergeable", pr.ID())
+
+	logger = logger.With("pr", pr.ID())
+
+	logger.Info("PR is unmergeable")
 	commitMsg, err := templateString(ru.commitMsgTemplate, templateData)
 	if err != nil {
 		return fmt.Errorf("error templating commit message: %w", err)
@@ -439,7 +444,7 @@ func (ru *RegexUpdater) fixIfUnmergeable(file repository.File, pr repository.Pul
 		return err
 	}
 
-	logger.Infof("Successfully rebased PR %s", pr.ID())
+	logger.Info("Successfully rebased PR")
 	return nil
 }
 

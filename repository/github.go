@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"strconv"
 
 	"github.com/devon-mar/regexupdater/utils/githubutil"
 	"github.com/google/go-github/v45/github"
-	"golang.org/x/exp/slices"
 )
 
 const (

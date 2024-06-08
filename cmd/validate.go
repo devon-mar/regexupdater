@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"log/slog"
+	"os"
+
 	"github.com/devon-mar/regexupdater/feed"
 	"github.com/devon-mar/regexupdater/regexupdater"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +24,8 @@ func init() {
 
 func runValidate() int {
 	if err := regexupdater.ValidateConfig(config); err != nil {
-		log.WithError(err).Fatal("Error initializing regexupdater")
+		slog.Error("Error initializing regexupdater", "err", err)
+		os.Exit(1)
 	}
 
 	var ret int
@@ -33,20 +36,20 @@ func runValidate() int {
 		err := feed.Validate(name, cfg.Type, cfg.Config)
 		if err != nil {
 			ret++
-			log.WithError(err).WithField("feed", name).Error("error validating feed")
+			slog.Error("error validating feed", "feed", name, "err", err)
 		}
 	}
 
 	for _, u := range config.Updates {
 		if err := feed.ValidateUpdate(feedTypes[u.Feed.Name], u.Feed.Config); err != nil {
 			ret++
-			log.WithError(err).WithField("update", u.Name).Error("error validating update feed config")
+			slog.Error("error validating update feed config", "update", u.Name, "err", err)
 		}
 
 		if u.SecondaryFeed != nil {
 			if err := feed.ValidateUpdate(feedTypes[u.SecondaryFeed.Feed.Name], u.SecondaryFeed.Feed.Config); err != nil {
 				ret++
-				log.WithError(err).WithField("update", u.Name).Error("error validating secondary update feed config")
+				slog.Error("error validating secondary update feed config", "update", u.Name, "err", err)
 			}
 		}
 	}

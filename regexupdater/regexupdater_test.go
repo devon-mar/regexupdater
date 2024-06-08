@@ -3,6 +3,7 @@ package regexupdater
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"reflect"
 	"regexp"
 	"strings"
@@ -10,7 +11,6 @@ import (
 
 	"github.com/devon-mar/regexupdater/feed"
 	"github.com/devon-mar/regexupdater/repository"
-	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -825,7 +825,7 @@ three: v1.4.0
 				tc.ru.feeds[testSecondaryFeed] = tc.f2
 			}
 
-			err = tc.ru.Process(&tc.u, log.WithField("test", name))
+			err = tc.ru.Process(&tc.u, slog.With("test", name))
 			if tc.wantError && err == nil {
 				t.Error("expected an error")
 			} else if !tc.wantError && err != nil {

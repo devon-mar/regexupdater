@@ -1,12 +1,11 @@
 package cmd
 
 import (
+	"log/slog"
 	"os"
 
 	"github.com/devon-mar/regexupdater/regexupdater"
 	"github.com/spf13/cobra"
-
-	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -22,25 +21,29 @@ The PR ID can also be given through the environment variable ` + envRegexUpdater
 	Run: func(cmd *cobra.Command, args []string) {
 		var prID string
 		if len(args) > 1 {
-			log.Fatal("exactly one argument is required")
+			slog.Error("exactly one argument is required")
+			os.Exit(1)
 		} else if len(args) == 1 {
 			prID = args[0]
 		} else {
 			if envPR := os.Getenv(envRegexUpdaterPRID); envPR != "" {
 				prID = envPR
 			} else {
-				log.Fatal("PR ID is required.")
+				slog.Error("PR ID is required.")
+				os.Exit(1)
 			}
 		}
 		ru, err := regexupdater.NewUpdater(config)
 		if err != nil {
-			log.WithError(err).Fatal("Error initializing regexupdater")
+			slog.Error("Error initializing regexupdater", "err", err)
+			os.Exit(1)
 		}
 		branch, err := ru.DeletePRBranch(prID)
 		if err != nil {
-			log.WithError(err).Fatal("Error deleting branch.")
+			slog.Error("Error deleting branch.", "pr", prID, "err", err)
+			os.Exit(1)
 		}
-		log.WithField("branch", branch).Info("Deleted branch.")
+		slog.Info("Deleted branch.", "branch", branch)
 	},
 }
 

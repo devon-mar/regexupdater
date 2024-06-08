@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"log/slog"
+	"os"
+
 	"github.com/devon-mar/regexupdater/regexupdater"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -27,14 +29,15 @@ func run() int {
 	}
 	ru, err := regexupdater.NewUpdater(config)
 	if err != nil {
-		log.WithError(err).Fatal("Error initializing regexupdater")
+		slog.Error("Error initializing regexupdater", "err", err)
+		os.Exit(1)
 	}
 
 	var ret int
 	for _, u := range config.Updates {
-		logger := log.WithField("update", u.Name)
+		logger := slog.With("update", u.Name)
 		if err := ru.Process(u, logger); err != nil {
-			logger.WithError(err).Error("Error updating")
+			logger.Error("Error updating", "err", err)
 			ret++
 		}
 	}

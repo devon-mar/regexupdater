@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"log/slog"
+	"os"
+
 	"github.com/devon-mar/regexupdater/regexupdater"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -22,21 +24,22 @@ func init() {
 func currentVersions() int {
 	ru, err := regexupdater.NewUpdater(config)
 	if err != nil {
-		log.WithError(err).Fatal("Error initializing regexupdater")
+		slog.Error("Error initializing regexupdater", "err", err)
+		os.Exit(1)
 	}
 
 	var ret int
 	for _, u := range config.Updates {
-		logger := log.WithField("update", u.Name)
+		logger := slog.With("update", u.Name)
 		v, err := ru.CurrentVersion(u)
 		if err != nil {
-			logger.WithError(err).Error("Error updating")
+			logger.Error("Error updating", "err", err)
 			ret++
 		} else {
 			if v.SV != nil {
-				logger.Infof("current version: %s (%s)", v.V, v.SV)
+				logger.Info("current version", "version", v.V, "semver", v.SV)
 			} else {
-				logger.Infof("current version: %s", v.V)
+				logger.Info("current version", "version", v.V)
 			}
 		}
 	}

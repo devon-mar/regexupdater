@@ -1,10 +1,10 @@
 package cmd
 
 import (
+	"log/slog"
 	"os"
 
 	"github.com/devon-mar/regexupdater/regexupdater"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -43,6 +43,7 @@ func initConfig() {
 	var err error
 	config, err = regexupdater.ReadConfig(cfgFile)
 	if err != nil {
-		log.WithError(err).Fatal("Error loading config.")
+		slog.Error("Error loading config.", "err", err)
+		os.Exit(1)
 	}
 }

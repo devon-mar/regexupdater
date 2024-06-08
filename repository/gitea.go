@@ -4,11 +4,11 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"slices"
 	"strconv"
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/devon-mar/regexupdater/utils/giteautil"
-	"golang.org/x/exp/slices"
 )
 
 const (
