@@ -6,7 +6,7 @@ toolchain go1.22.4
 
 require (
 	code.gitea.io/sdk/gitea v0.19.0
-	github.com/Masterminds/semver/v3 v3.2.1
+	github.com/Masterminds/semver/v3 v3.3.0
 	github.com/bradleyfalzon/ghinstallation/v2 v2.11.0
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/google/go-github/v45 v45.2.0
