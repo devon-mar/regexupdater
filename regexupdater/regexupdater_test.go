@@ -808,6 +808,22 @@ three: v1.4.0
 			},
 			f: newTestFeed("1.4.0"),
 		},
+		"skip_unparsable=True": {
+			u: updateConfig{
+				Name:           "test",
+				Path:           testFilePath,
+				Feed:           updateFeedConfig{Name: testFeedName, feedConfig: testFeedRepo},
+				SkipUnparsable: true,
+				mregex:         regexp.MustCompile("^(.*)$"),
+			},
+			r: &testRepository{
+				content: "1.0",
+				wantUpdate: &fileUpdate{
+					contentOnly: "1.1",
+				},
+			},
+			f: newTestFeed("abc/1.2.3", "1.1", "1.0"),
+		},
 	}
 
 	for name, tc := range tests {
