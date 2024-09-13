@@ -340,7 +340,10 @@ func (ru *RegexUpdater) checkRelease(r *feed.Release, currentVer version, u *upd
 
 	var err error
 	ri.version.SV, err = semver.NewVersion(ri.version.V)
-	if err != nil {
+	if err != nil && u.SkipUnparsable {
+		logger.Debug("Skipping version: cannot parse as semver", "err", err)
+		return nil, nil
+	} else if err != nil {
 		return nil, fmt.Errorf("error parsing %q as a semantic version: %w", ri.version, err)
 	}
 

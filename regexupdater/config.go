@@ -107,7 +107,8 @@ type updateConfig struct {
 
 	IsNotSemver bool `yaml:"is_not_semver"`
 
-	UseSemver bool `yaml:"use_semver"`
+	UseSemver      bool `yaml:"use_semver"`
+	SkipUnparsable bool `yaml:"skip_unaprsable"`
 
 	PreReplace    *Replace             `yaml:"pre_replace"`
 	SecondaryFeed *SecondaryFeedConfig `yaml:"secondary_feed"`
