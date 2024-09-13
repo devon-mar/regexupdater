@@ -43,7 +43,7 @@ updates:
     #
     # For example, if the feed returns version "1.0", "1.0.0" will be used in the file.
     [ use_semver: <bool> | default = false ]
-    # Skip versions that can't be parsed as a semantic version when use_semver=True.
+    # Skip versions that can't be parsed as a semantic version when is_not_semver=False.
     [ skip_unparsable: <bool> | default = false ]
     # Replace the version returned by the feed before parsing as a semantic version.
     # The replaced text will also be used when updating the file.
