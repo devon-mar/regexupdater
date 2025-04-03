@@ -1,9 +1,8 @@
 module github.com/devon-mar/regexupdater
 
 go 1.21
-
 require (
-	code.gitea.io/sdk/gitea v0.20.0
+	code.gitea.io/sdk/gitea v0.21.0
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/bradleyfalzon/ghinstallation/v2 v2.13.0
 	github.com/go-playground/validator/v10 v10.26.0
@@ -16,7 +15,7 @@ require (
 )
 
 require (
-	github.com/42wim/httpsig v1.2.1 // indirect
+	github.com/42wim/httpsig v1.2.2 // indirect
 	github.com/PuerkitoBio/goquery v1.9.2 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
