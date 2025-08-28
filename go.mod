@@ -3,7 +3,7 @@ module github.com/devon-mar/regexupdater
 go 1.23.0
 
 require (
-	code.gitea.io/sdk/gitea v0.20.0
+	code.gitea.io/sdk/gitea v0.22.0
 	github.com/Masterminds/semver/v3 v3.4.0
 	github.com/bradleyfalzon/ghinstallation/v2 v2.16.0
 	github.com/go-playground/validator/v10 v10.27.0
@@ -16,7 +16,7 @@ require (
 )
 
 require (
-	github.com/42wim/httpsig v1.2.1 // indirect
+	github.com/42wim/httpsig v1.2.3 // indirect
 	github.com/PuerkitoBio/goquery v1.9.2 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
@@ -35,8 +35,8 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
-	golang.org/x/crypto v0.33.0 // indirect
+	golang.org/x/crypto v0.39.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
+	golang.org/x/text v0.26.0 // indirect
 )
