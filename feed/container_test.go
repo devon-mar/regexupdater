@@ -21,12 +21,12 @@ func newTestRegistry() (string, func(), error) {
 		switch r.URL.Path {
 		case "/token":
 			if r.URL.Query().Get("scope") == testContainerScope && r.URL.Query().Get("service") == testContainerAuthService {
-				_, _ = w.Write([]byte(fmt.Sprintf(`{
+				_, _ = fmt.Fprintf(w, `{
     "token": "%s",
     "access_token": "%s",
     "expires_in": 300,
     "issued_at": "2022-07-19T16:48:50.352866197Z"
-}`, testContainerToken, testContainerToken)))
+}`, testContainerToken, testContainerToken)
 				w.Header().Add("content-type", "application/json")
 			} else {
 				http.Error(w, "", http.StatusBadRequest)

@@ -142,7 +142,7 @@ func ValidateConfig(c *Config) error {
 func (ru *RegexUpdater) Process(u *updateConfig, logger *slog.Logger) error {
 	file, err := ru.repo.GetFile(u.Path)
 	if err != nil {
-		return fmt.Errorf("Error retrieving file: %w", err)
+		return fmt.Errorf("error retrieving file: %w", err)
 	}
 	if file == nil {
 		return errors.New("file was nil")
@@ -152,7 +152,7 @@ func (ru *RegexUpdater) Process(u *updateConfig, logger *slog.Logger) error {
 
 	match := u.mregex.FindSubmatchIndex(origContent)
 	if len(match) != 4 {
-		return errors.New("No matches found")
+		return errors.New("no matches found")
 	}
 
 	matchL := match[2]
@@ -411,10 +411,10 @@ func (ru *RegexUpdater) supersedePR(newID string, oldPR repository.PullRequest, 
 	}
 
 	if err := ru.repo.AddPRComment(oldPR, "Superseded by "+newID); err != nil {
-		return fmt.Errorf("Error adding comment to old PR %s: %w", oldPR.ID(), err)
+		return fmt.Errorf("error adding comment to old PR %s: %w", oldPR.ID(), err)
 	}
 	if err := ru.repo.ClosePR(oldPR); err != nil {
-		return fmt.Errorf("Error closing old PR %s: %w", oldPR.ID(), err)
+		return fmt.Errorf("error closing old PR %s: %w", oldPR.ID(), err)
 	}
 	return nil
 }

@@ -262,7 +262,7 @@ func (g *Gitea) RebasePR(pr PullRequest, path string, oldSHA string, newContent 
 func (g *Gitea) DeletePRBranch(prID string) (string, error) {
 	index, err := strconv.ParseInt(prID, 10, 64)
 	if err != nil || index < 1 {
-		return "", fmt.Errorf("%s is not a valid PR index.", prID)
+		return "", fmt.Errorf("%s is not a valid PR index", prID)
 	}
 
 	pr, _, err := g.client.GetPullRequest(g.Owner, g.Repo, index)

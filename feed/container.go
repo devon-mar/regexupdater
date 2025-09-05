@@ -134,7 +134,7 @@ func (c *ContainerRegistry) getReleases(config interface{}, done chan struct{}) 
 
 func (c *ContainerRegistry) getToken(hdr string, client *http.Client) (string, error) {
 	if !strings.HasPrefix(hdr, "Bearer") {
-		return "", fmt.Errorf("Unsupported auth type: %s", hdr)
+		return "", fmt.Errorf("unsupported auth type: %s", hdr)
 	}
 
 	var realm string
@@ -146,7 +146,7 @@ func (c *ContainerRegistry) getToken(hdr string, client *http.Client) (string, e
 	for _, kv := range strings.Split(hdr, ",") {
 		key, val, ok := strings.Cut(kv, "=")
 		if !ok {
-			return "", fmt.Errorf("Invalid KV pair %q", kv)
+			return "", fmt.Errorf("invalid KV pair %q", kv)
 		}
 
 		val = strings.Trim(val, `"`)

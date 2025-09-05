@@ -1,7 +1,6 @@
 package envtag
 
 import (
-	"os"
 	"reflect"
 	"testing"
 )
@@ -23,9 +22,9 @@ func TestUnmarshal(t *testing.T) {
 		OtherStruct: OtherStruct{FieldD: "field d"},
 	}
 
-	os.Setenv("PREFIX_FIELD_A", want.FieldA)
-	os.Setenv("PREFIX_FIELD_B", want.FieldB)
-	os.Setenv("PREFIX_FIELD_D", want.FieldD)
+	t.Setenv("PREFIX_FIELD_A", want.FieldA)
+	t.Setenv("PREFIX_FIELD_B", want.FieldB)
+	t.Setenv("PREFIX_FIELD_D", want.FieldD)
 
 	s := &TestStruct{FieldC: "456"}
 	Unmarshal("env", "PREFIX_", s)

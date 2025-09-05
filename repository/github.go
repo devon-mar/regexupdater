@@ -356,7 +356,7 @@ func (gh *GitHub) deletePRBranch(pr *github.PullRequest) error {
 func (gh *GitHub) DeletePRBranch(prID string) (string, error) {
 	prNumber, err := strconv.Atoi(prID)
 	if err != nil || prNumber < 1 {
-		return "", fmt.Errorf("%s is not a valid PR number.", prID)
+		return "", fmt.Errorf("%s is not a valid PR number", prID)
 	}
 
 	pr, _, err := gh.client.PullRequests.Get(
