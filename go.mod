@@ -1,6 +1,6 @@
 module github.com/devon-mar/regexupdater
 
-go 1.23.0
+go 1.24.0
 
 require (
 	code.gitea.io/sdk/gitea v0.22.0
@@ -11,7 +11,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mmcdole/gofeed v1.3.0
 	github.com/spf13/cobra v1.10.1
-	golang.org/x/oauth2 v0.30.0
+	golang.org/x/oauth2 v0.31.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
