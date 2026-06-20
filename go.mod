@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	code.gitea.io/sdk/gitea v0.23.2
 	github.com/Masterminds/semver/v3 v3.5.0
-	github.com/bradleyfalzon/ghinstallation/v2 v2.18.0
+	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0
 	github.com/go-playground/validator/v10 v10.30.2
 	github.com/google/go-github/v45 v45.2.0
 	github.com/mitchellh/mapstructure v1.5.0
@@ -25,7 +25,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
-	github.com/google/go-github/v84 v84.0.0 // indirect
+	github.com/google/go-github/v88 v88.0.0 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
