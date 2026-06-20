@@ -10,7 +10,7 @@ import (
 func Unmarshal(tagName string, prefix string, s interface{}) {
 	structVal := reflect.ValueOf(s)
 
-	if structVal.Kind() != reflect.Ptr {
+	if structVal.Kind() != reflect.Pointer {
 		panic("s must be an interface")
 	}
 	structVal = structVal.Elem()
