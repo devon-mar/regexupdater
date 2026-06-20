@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	code.gitea.io/sdk/gitea v0.23.2
-	github.com/Masterminds/semver/v3 v3.4.0
+	github.com/Masterminds/semver/v3 v3.5.0
 	github.com/bradleyfalzon/ghinstallation/v2 v2.18.0
 	github.com/go-playground/validator/v10 v10.30.2
 	github.com/google/go-github/v45 v45.2.0
